@@ -1,5 +1,5 @@
-import React from "react"
-import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView, TouchableWithoutFeedback, Platform } from "react-native"
+import React, { Component } from "react"
+import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Animated from "react-native-reanimated"
 import Paginator from "../components/Paginator"
@@ -38,7 +38,76 @@ const SECTIONS = [
         title: "Free Delivery and Returns",
         content: "Each customer is entitled for free shipping for every order they have made (only applicable across Peninsula Malaysia).",
     },
-];
+]
+
+class AccordionView extends Component {
+    constructor(props) {
+        // Required step: always call the parent class' constructor
+        super(props);
+        this.state = {
+            activeSections: [],
+            collapsed: true,
+            multipleSelect: true,
+        }
+    }
+
+    toggleExpanded = () => {
+        this.setState({ collapsed: !this.state.collapsed })
+    }
+    renderHeader = (section, isActive) => {
+        return (
+            <View style={[styles.prodInfoAlignment, {marginHorizontal: 0}]}>
+                <Text style={{
+                    fontSize: ScreenRatio_iPhone(20),
+                    fontWeight: "600"
+                }}>{section.title}</Text>
+                <Image
+                    source={(isActive) ? require("../../assets/icons/chevron-up-outline.png") : require("../../assets/icons/chevron-down-outline.png")}
+                    style={{
+                        width: ScreenRatio_iPhone(24),
+                        height: ScreenRatio_iPhone(24)
+                    }}/>
+            </View>
+        )
+    }
+    renderContent = (section) => {
+        return (
+            <View style={{marginBottom: 15}}>
+                <Text style={{
+                    fontSize: ScreenRatio_iPhone(16),
+                    lineHeight: ScreenRatio_iPhone(24)
+                }}>{section.content}</Text>
+            </View>
+        )
+    }
+    updateSections = (activeSections) => {
+        this.setState({ activeSections })
+    }
+
+    render() {
+        const { activeSections } = this.state
+
+        return (
+            <Accordion
+                activeSections={activeSections}
+                sections={SECTIONS}
+                touchableComponent={TouchableWithoutFeedback}
+                sectionContainerStyle={{
+                    marginVertical: ScreenRatio_iPhone(15),
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#c2c2c2",
+                    marginHorizontal: ScreenRatio_iPhone(25)
+                }}
+                containerStyle={{marginVertical: ScreenRatio_iPhone(40)}}
+                renderHeader={this.renderHeader}
+                renderContent={this.renderContent}
+                onChange={this.updateSections}
+                toggleExpanded={this.toggleExpanded}
+                duration={350}
+            />
+        )
+    }
+}
 
 const Product = ({navigation}) => {
     // Back and "more options" buttons...
@@ -187,40 +256,8 @@ const Product = ({navigation}) => {
                         )
                     }
                 </ScrollView>
-                {/* Product description, delivery policies & reviews... */}
-                <Accordion
-                    activeSections={[]}
-                    sections={SECTIONS}
-                    touchableComponent={TouchableWithoutFeedback}
-                    sectionContainerStyle={{
-                        marginVertical: ScreenRatio_iPhone(15),
-                        borderBottomWidth: 1,
-                        borderBottomColor: "#c2c2c2",
-                        marginHorizontal: ScreenRatio_iPhone(25)
-                    }}
-                    expandMultiple={true}
-                    containerStyle={{marginVertical: 40}}
-                    renderHeader={(section, isActive) => {
-                        return (
-                            <View style={[styles.prodInfoAlignment, {marginHorizontal: 0}]}>
-                                <Text style={{fontSize: ScreenRatio_iPhone(20), fontWeight: "600"}}>{section.title}</Text>
-                                <Image
-                                    source={(isActive) ? require("../../assets/icons/chevron-up-outline.png") : require("../../assets/icons/chevron-down-outline.png")}
-                                    style={{
-                                        width: ScreenRatio_iPhone(24),
-                                        height: ScreenRatio_iPhone(24)
-                                    }}/>
-                            </View>
-                        )
-                    }}
-                    renderContent={(section) => {
-                        return (
-                            <View style={styles.prodInfoAlignment}>
-                                <Text style={{fontSize: ScreenRatio_iPhone(16), lineHeight: ScreenRatio_iPhone(16)}}>{section.content}</Text>
-                            </View>
-                        )
-                    }}
-                />
+                {/* Product description, delivery policies & reviewsß... */}
+                <AccordionView/>
             </View>
         )
     }
@@ -265,5 +302,3 @@ function highlightSizeType(sizeType) {
 }
 
 export default Product
-
-// style={{flex: 1, justifyContent: "space-between"}}
