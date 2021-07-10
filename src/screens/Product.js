@@ -1,9 +1,12 @@
 import React from "react"
-import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView, TouchableWithoutFeedback } from "react-native"
+import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView, TouchableWithoutFeedback, Platform } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Animated from "react-native-reanimated"
 import Paginator from "../components/Paginator"
 import Accordion from 'react-native-collapsible/Accordion';
+
+import 'intl';
+import 'intl/locale-data/jsonp/en';
 
 // Dummy data
 const product = {
@@ -20,7 +23,7 @@ const product = {
     sizes: [4, 5, 6, 7, 8, 9, 10, 11, 12]
 }
 // Currency formatter
-const formatter = Intl.NumberFormat('en-UK', {
+const formatter = Intl.NumberFormat('en-UK',{
     style: "currency",
     currency: "MYR"
 })
@@ -153,7 +156,7 @@ const Product = ({navigation}) => {
                             <TouchableOpacity
                             onpress={() => {}}>
                                 <Text
-                                    key={`${product.prodID}-${size}`}
+                                    key={`${product.prodID}-${index}`}
                                     style={{
                                         backgroundColor: "#e3e5ea",
                                         //backgroundColor: ({focused}) ? "#f58b4b" : "#e3e5ea",
