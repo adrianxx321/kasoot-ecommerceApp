@@ -1,6 +1,7 @@
 import React from "react"
 import { View, StyleSheet, Dimensions } from "react-native"
 import Animated from "react-native-reanimated"
+import { ScreenRatio_iPhone } from "./ScreenRatio-iPhone"
 
 const {width, height} = Dimensions.get("window")
 
@@ -10,14 +11,14 @@ export default Paginator = ({data, scrollX}) => {
             style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                bottom: 30
+                bottom: ScreenRatio_iPhone(30)
             }}>
             {data.map((_, index) => {
                 const inputRange = [(index - 1) * width, index * width, (index + 1) * width]
 
                 const indicatorLength = scrollX.interpolate({
                     inputRange,
-                    outputRange: [12, 36, 12],
+                    outputRange: [ScreenRatio_iPhone(12), ScreenRatio_iPhone(36), ScreenRatio_iPhone(12)],
                     extrapolate: "clamp"
                 })
 
@@ -37,9 +38,9 @@ export default Paginator = ({data, scrollX}) => {
 
 const styles = StyleSheet.create({
     indicator: {
-        height: 6,
-        borderRadius: 5,
+        height: ScreenRatio_iPhone(6),
+        borderRadius: ScreenRatio_iPhone(5),
         backgroundColor: "#bf5f26",
-        marginHorizontal: 6,
+        marginHorizontal: ScreenRatio_iPhone(6),
     }
 })

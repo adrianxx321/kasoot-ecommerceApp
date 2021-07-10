@@ -7,6 +7,7 @@ import Accordion from 'react-native-collapsible/Accordion';
 
 import 'intl';
 import 'intl/locale-data/jsonp/en';
+import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
 // Dummy data
 const product = {
@@ -43,13 +44,16 @@ const Product = ({navigation}) => {
     // Back and "more options" buttons...
     function renderHeader() {
         return (
-            <View
+            <SafeAreaView
                 style={{
-                    flexDirection: "row",
                     zIndex: 3,
-                    marginHorizontal: 15,
-                    marginVertical: 15,
+                    marginHorizontal: ScreenRatio_iPhone(15),
+                    marginVertical: ScreenRatio_iPhone(15),
+                    flexDirection: "row",
                     justifyContent: "space-between",
+                    position: "absolute",
+                    left: 0,
+                    right: 0
                 }}>
                 <TouchableOpacity
                     onpress={() => navigation.goBack()}>
@@ -67,7 +71,7 @@ const Product = ({navigation}) => {
                         style={styles.headerButtons}
                     />
                 </TouchableOpacity>
-            </View>
+            </SafeAreaView>
         )
     }
 
@@ -82,7 +86,7 @@ const Product = ({navigation}) => {
                     {
                         backgroundColor: "#e3e5ea",
                         height: Dimensions.get('window').height * 0.4,
-                        position: "absolute",
+                        marginBottom: ScreenRatio_iPhone(30)
                     }
                 ]}>
                 <Animated.ScrollView
@@ -97,13 +101,12 @@ const Product = ({navigation}) => {
                                 key={`img-${index}`}
                                 style={{
                                     width: Dimensions.get('window').width,
-                                    height: 320,
+                                    height: Dimensions.get("window").height * 0.35,
                                     resizeMode: "contain",
                                     zIndex: 2,
                                     marginVertical: Dimensions.get("window").height * 0.05
                                 }}
-                                source={imgPath}
-                            />
+                                source={imgPath}/>
                         )
                     }
                 </Animated.ScrollView>
@@ -116,28 +119,41 @@ const Product = ({navigation}) => {
         return (
             <View>
                 {/* Shoe category & rating... */}
-                <View style={[styles.prodInfoAlignment]}>
-                    <Text style={{fontSize: 18, color: "#c2c2c2"}}>{product.prodCat}</Text>
+                <View style={styles.prodInfoAlignment}>
+                    <Text style={{
+                        fontSize: ScreenRatio_iPhone(18),
+                        color: "#c2c2c2"
+                    }}>{product.prodCat}</Text>
                     <View style={{flexDirection: "row"}}>
                         <Image 
                             source={(product.rating > 0) ? require("../../assets/icons/star.png"): require("../../assets/icons/star-outline.png")}
                             style={{
-                                width: 22,
-                                height: 22,
+                                width: ScreenRatio_iPhone(22),
+                                height: ScreenRatio_iPhone(22),
                                 tintColor: "#f58b4b",
-                                marginEnd: 5
+                                marginEnd: ScreenRatio_iPhone(5)
                             }}/>
-                        <Text style={{fontSize: 18, color: "#c2c2c2"}}>({product.rating})</Text>
+                        <Text style={{
+                            fontSize: ScreenRatio_iPhone(18),
+                            color: "#c2c2c2"
+                        }}>({product.rating})</Text>
                     </View>
                 </View>
                 {/* Shoe name & price... */}
                 <View style={styles.prodInfoAlignment}>
-                    <Text style={{fontSize: 24, fontWeight: "500", width: "60%"}}>{product.prodName}</Text>
-                    <Text style={{fontSize: 20}}>{formatter.format(product.prodPrice)}</Text>
+                    <Text style={{
+                        fontSize: ScreenRatio_iPhone(24),
+                        fontWeight: "500",
+                        width: "60%"
+                    }}>{product.prodName}</Text>
+                    <Text style={{fontSize: ScreenRatio_iPhone(20)}}>{formatter.format(product.prodPrice)}</Text>
                 </View>
                 {/* Shoe size info... */}
-                <View style={[styles.prodInfoAlignment, {marginTop: 20}]}>
-                    <Text style={{fontSize: 18, fontWeight: "bold"}}>Size:</Text>
+                <View style={[styles.prodInfoAlignment, {marginTop: ScreenRatio_iPhone(20)}]}>
+                    <Text style={{
+                        fontSize: ScreenRatio_iPhone(18),
+                        fontWeight: "bold"
+                    }}>Size:</Text>
                     <View style={{flexDirection: "row"}}>
                         <Text style={highlightSizeType("UK").selectedSizeType}>UK</Text>
                         <Text style={highlightSizeType("US").selectedSizeType}>US</Text>
@@ -148,9 +164,7 @@ const Product = ({navigation}) => {
                 <ScrollView
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{
-                        marginHorizontal: 15,
-                    }}>
+                    contentContainerStyle={{marginHorizontal: ScreenRatio_iPhone(15)}}>
                     {
                         product.sizes.map((size, index, {focused}) =>
                             <TouchableOpacity
@@ -160,10 +174,10 @@ const Product = ({navigation}) => {
                                     style={{
                                         backgroundColor: "#e3e5ea",
                                         //backgroundColor: ({focused}) ? "#f58b4b" : "#e3e5ea",
-                                        paddingHorizontal: 25,
-                                        paddingVertical: 22,
-                                        marginHorizontal: 10,
-                                        fontSize: 20,
+                                        paddingHorizontal: ScreenRatio_iPhone(25),
+                                        paddingVertical: ScreenRatio_iPhone(22),
+                                        marginHorizontal: ScreenRatio_iPhone(10),
+                                        fontSize: ScreenRatio_iPhone(20),
                                         borderRadius: 15,
                                         overflow: "hidden"
                                     }}>
@@ -173,28 +187,28 @@ const Product = ({navigation}) => {
                         )
                     }
                 </ScrollView>
-                
+                {/* Product description, delivery policies & reviews... */}
                 <Accordion
                     activeSections={[]}
                     sections={SECTIONS}
                     touchableComponent={TouchableWithoutFeedback}
                     sectionContainerStyle={{
-                        marginVertical: 15,
+                        marginVertical: ScreenRatio_iPhone(15),
                         borderBottomWidth: 1,
                         borderBottomColor: "#c2c2c2",
-                        marginHorizontal: 25
+                        marginHorizontal: ScreenRatio_iPhone(25)
                     }}
                     expandMultiple={true}
                     containerStyle={{marginVertical: 40}}
                     renderHeader={(section, isActive) => {
                         return (
                             <View style={[styles.prodInfoAlignment, {marginHorizontal: 0}]}>
-                                <Text style={{fontSize: 20, fontWeight: "600"}}>{section.title}</Text>
+                                <Text style={{fontSize: ScreenRatio_iPhone(20), fontWeight: "600"}}>{section.title}</Text>
                                 <Image
                                     source={(isActive) ? require("../../assets/icons/chevron-up-outline.png") : require("../../assets/icons/chevron-down-outline.png")}
                                     style={{
-                                        width: 24,
-                                        height: 24
+                                        width: ScreenRatio_iPhone(24),
+                                        height: ScreenRatio_iPhone(24)
                                     }}/>
                             </View>
                         )
@@ -202,7 +216,7 @@ const Product = ({navigation}) => {
                     renderContent={(section) => {
                         return (
                             <View style={styles.prodInfoAlignment}>
-                                <Text style={{fontSize: 16, lineHeight: 16}}>{section.content}</Text>
+                                <Text style={{fontSize: ScreenRatio_iPhone(16), lineHeight: ScreenRatio_iPhone(16)}}>{section.content}</Text>
                             </View>
                         )
                     }}
@@ -212,27 +226,29 @@ const Product = ({navigation}) => {
     }
 
     return (
-        <SafeAreaView style={{flex: 1, justifyContent: "space-between"}}>
+        <View>
             {renderHeader()}
-            {renderShoeImages()}
-            {renderShoeInfo()}
-        </SafeAreaView>
+            <ScrollView>
+                {renderShoeImages()}
+                {renderShoeInfo()}
+            </ScrollView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     headerButtons: {
-        width: 30,
-        height: 30,
+        width: ScreenRatio_iPhone(30),
+        height: ScreenRatio_iPhone(30),
     },
     imageViewBorders: {
-        borderBottomLeftRadius: 50,
-        borderBottomRightRadius: 50,
+        borderBottomLeftRadius: ScreenRatio_iPhone(50),
+        borderBottomRightRadius: ScreenRatio_iPhone(50),
     },
     prodInfoAlignment: {
         flexDirection: "row",
-        marginHorizontal: 25,
-        marginBottom: 20,
+        marginHorizontal: ScreenRatio_iPhone(25),
+        marginBottom: ScreenRatio_iPhone(20),
         justifyContent: "space-between"
     }
 })
@@ -240,8 +256,8 @@ const styles = StyleSheet.create({
 function highlightSizeType(sizeType) {
     return StyleSheet.create({
         selectedSizeType: {
-            fontSize: 18,
-            marginEnd: 10,
+            fontSize: ScreenRatio_iPhone(18),
+            marginEnd: ScreenRatio_iPhone(10),
             color: (sizeType == product.sizeType) ? "#000000" : "#c2c2c2",
             fontWeight: (sizeType == product.sizeType) ? "600" : "400"
         }
@@ -249,3 +265,5 @@ function highlightSizeType(sizeType) {
 }
 
 export default Product
+
+// style={{flex: 1, justifyContent: "space-between"}}
