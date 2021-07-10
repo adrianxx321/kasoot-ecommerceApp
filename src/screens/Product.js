@@ -2,8 +2,7 @@ import React from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Animated from "react-native-reanimated"
-
-const {height, width} = Dimensions.get('window');
+import Paginator from "../components/Paginator"
 
 // Dummy data
 const product = {
@@ -13,7 +12,7 @@ const product = {
     prodDiscount: 60,
     prodBrand: "Adidas",
     prodDesc: "Channeling the streamlined look of an '80s racer, these shoes are updated with modern features. The foot-hugging adidas Primeknit upper offers a soft, breathable feel. The Boost midsole provides responsive comfort accented with a contrast-color EVA heel plug. Embroidered details add a distinctive finish.",
-    prodImg: [require("../../assets/dummy/WOMEN_Originals_SHOES_LOW_AH2430_2.png"), require("../../assets/dummy/WOMEN_Originals_SHOES_LOW_AH2430_1.png"), require("../../assets/dummy/WOMEN_Originals_SHOES_LOW_AH2430_3.png"), require("../../assets/dummy/WOMEN_Originals_SHOES_LOW_AH2430_4.png")],
+    prodImg: [require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_2.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_1.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_3.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_4.png")],
     prodCat: "Sneakers",
     prodGender: "Female"
 }
@@ -38,14 +37,6 @@ const Product = ({navigation}) => {
                         style={styles.headerButtons}
                     />
                 </TouchableOpacity>
-                <Image
-                    source={require("../../assets/adidas-logo.png")}
-                    resizeMode="contain"
-                    style={{
-                        height: 46,
-                        width: 46
-                    }}
-                />
                 <TouchableOpacity
                     onpress={() => {}}>
                     <Image
@@ -68,7 +59,7 @@ const Product = ({navigation}) => {
                     styles.imageViewBorders,
                     {
                         backgroundColor: "#e3e5ea",
-                        height: 320,
+                        height: Dimensions.get('window').height * 0.4,
                         position: "absolute",
                     }
                 ]}>
@@ -80,19 +71,21 @@ const Product = ({navigation}) => {
                     onScroll={Animated.event([{nativeEvent: {contentOffset: {x: scrollX}}}], {useNativeDriver: false})}>
                     {
                         product.prodImg.map((imgPath, index) =>
-                            <Image 
+                            <Image
                                 key={`img-${index}`}
                                 style={{
-                                    width: width,
+                                    width: Dimensions.get('window').width,
                                     height: 320,
-                                    resizeMode: "center",
+                                    resizeMode: "contain",
                                     zIndex: 2,
+                                    marginVertical: Dimensions.get("window").height * 0.05
                                 }}
                                 source={imgPath}
                             />
                         )
                     }
                 </Animated.ScrollView>
+                <Paginator data={product.prodImg} scrollX={scrollX}/>
             </Animated.View>
         )
     }
