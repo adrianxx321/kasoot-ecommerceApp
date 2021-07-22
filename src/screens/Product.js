@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { useState } from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Animated from "react-native-reanimated"
@@ -21,8 +21,19 @@ const product = {
     prodCat: "Women's Sneaker",
     rating: 4.7,
     sizeType: "UK",
-    sizes: [4, 5, 6, 7, 8, 9, 10, 11, 12]
+    sizes: {
+        4: 20,
+        5: 12,
+        6: 14,
+        7: 8,
+        8: 0,
+        9: 2,
+        10: 0,
+        11: 7,
+        12: 11
+    }
 }
+
 // Currency formatter
 const formatter = Intl.NumberFormat('en-UK',{
     style: "currency",
@@ -30,11 +41,13 @@ const formatter = Intl.NumberFormat('en-UK',{
 })
 
 const Product = ({navigation}) => {
+    const [selectedShoe, setSelectedShoe] = useState(null)
+
     // Back and "more options" buttons...
     function renderHeader() {
         return (
             <SafeAreaView
-                style={{
+            style={{
                     zIndex: 3,
                     marginHorizontal: ScreenRatio_iPhone(15),
                     marginVertical: ScreenRatio_iPhone(15),
@@ -83,7 +96,8 @@ const Product = ({navigation}) => {
                     showsHorizontalScrollIndicator={false}
                     pagingEnabled={true}
                     style={[styles.imageViewBorders]}
-                    onScroll={Animated.event([{nativeEvent: {contentOffset: {x: scrollX}}}], {useNativeDriver: false})}>
+                    onScroll={Animated.event([{nativeEvent: {contentOffset: {x: scrollX}}}], {useNativeDriver: false})}
+                    scrollEventThrottle={16}>
                     {
                         product.prodImg.map((imgPath, index) =>
                             <Image
@@ -155,22 +169,26 @@ const Product = ({navigation}) => {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{marginHorizontal: ScreenRatio_iPhone(15)}}>
                     {
-                        product.sizes.map((size, index, {focused}) =>
+                        Object.keys(product.sizes).map((sizeNum, index) =>
                             <TouchableOpacity
-                            onpress={() => {}}>
+                                key={`${product.prodID}-${index}`}
+                                onPress={() => {
+                                    setSelectedShoe({ID: product.prodID, size: sizeNum})
+                                }}
+                                disabled={(product.sizes[sizeNum] != '0') ? false : true}>
                                 <Text
-                                    key={`${product.prodID}-${index}`}
                                     style={{
                                         backgroundColor: "#e3e5ea",
-                                        //backgroundColor: ({focused}) ? "#f58b4b" : "#e3e5ea",
-                                        paddingHorizontal: ScreenRatio_iPhone(25),
-                                        paddingVertical: ScreenRatio_iPhone(22),
+                                        backgroundColor: (selectedShoe != null && selectedShoe.size == sizeNum) ? "#f58b4b" : "#e3e5ea",
+                                        color: (selectedShoe != null && selectedShoe.size == sizeNum) ? "white" : (product.sizes[sizeNum] == '0') ? "#93959e" : "black",
+                                        paddingHorizontal: ScreenRatio_iPhone(26),
+                                        paddingVertical: ScreenRatio_iPhone(20),
                                         marginHorizontal: ScreenRatio_iPhone(10),
                                         fontSize: ScreenRatio_iPhone(20),
                                         borderRadius: ScreenRatio_iPhone(15),
-                                        overflow: "hidden"
+                                        overflow: "hidden",
                                     }}>
-                                    {size}
+                                    {sizeNum}
                                 </Text>
                             </TouchableOpacity>
                         )
