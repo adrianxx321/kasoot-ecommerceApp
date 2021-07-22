@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import Animated from "react-native-reanimated"
 import Paginator from "../components/Paginator"
 import CollapsibleList from "../components/CollapsibleList"
+import { LinearGradient } from "expo-linear-gradient"
 
 import 'intl';
 import 'intl/locale-data/jsonp/en';
@@ -43,7 +44,7 @@ const formatter = Intl.NumberFormat('en-UK',{
 const Product = ({navigation}) => {
     const [selectedShoe, setSelectedShoe] = useState(null)
 
-    // Back and "more options" buttons...
+    // Back and "more options" buttons ...
     function renderHeader() {
         return (
             <SafeAreaView
@@ -77,7 +78,7 @@ const Product = ({navigation}) => {
         )
     }
 
-    // Product images (carousell)...
+    // Product images (carousell) ...
     function renderShoeImages() {
         const scrollX = new Animated.Value(0)
         
@@ -106,7 +107,6 @@ const Product = ({navigation}) => {
                                     width: Dimensions.get('window').width,
                                     height: Dimensions.get("window").height * 0.35,
                                     resizeMode: "contain",
-                                    zIndex: 2,
                                     marginVertical: Dimensions.get("window").height * 0.05
                                 }}
                                 source={imgPath}/>
@@ -118,6 +118,7 @@ const Product = ({navigation}) => {
         )
     }
 
+    // Product information (name, price, rating, description etc.) ...
     function renderShoeInfo() {
         return (
             <View>
@@ -147,9 +148,22 @@ const Product = ({navigation}) => {
                     <Text style={{
                         fontSize: ScreenRatio_iPhone(24),
                         fontWeight: "500",
-                        width: "60%"
+                        width: "70%"
                     }}>{product.prodName}</Text>
-                    <Text style={{fontSize: ScreenRatio_iPhone(20)}}>{formatter.format(product.prodPrice)}</Text>
+                    <View>
+                        <Text style={{
+                            fontSize: ScreenRatio_iPhone(20),
+                            textDecorationLine: (product.prodDiscount) ? "line-through" : "none"}}>
+                                {formatter.format(product.prodPrice)}
+                        </Text>
+                        <Text style={{
+                            fontSize: ScreenRatio_iPhone(22),
+                            display: (product.prodDiscount) ? "flex" : "none",
+                            right: ScreenRatio_iPhone(10),
+                            fontWeight: "bold", color: "#de651d"}}>
+                                {formatter.format(product.prodPrice * (1 - product.prodDiscount / 100))}
+                        </Text>
+                    </View>
                 </View>
                 {/* Shoe size info... */}
                 <View style={[styles.prodInfoAlignment, {marginTop: ScreenRatio_iPhone(20)}]}>
@@ -178,7 +192,6 @@ const Product = ({navigation}) => {
                                 disabled={(product.sizes[sizeNum] != '0') ? false : true}>
                                 <Text
                                     style={{
-                                        backgroundColor: "#e3e5ea",
                                         backgroundColor: (selectedShoe != null && selectedShoe.size == sizeNum) ? "#f58b4b" : "#e3e5ea",
                                         color: (selectedShoe != null && selectedShoe.size == sizeNum) ? "white" : (product.sizes[sizeNum] == '0') ? "#93959e" : "black",
                                         paddingHorizontal: ScreenRatio_iPhone(26),
@@ -209,21 +222,76 @@ const Product = ({navigation}) => {
                             <Text style={styles.prodDescriptions}>Each customer is entitled for free shipping for every order they have made (only applicable across Peninsula Malaysia).</Text>
                         </View>
                     </CollapsibleList>
+                    {/* Reviews not implemented yet... */}
                     <CollapsibleList title={"See Reviews"}>
-                        <Text style={{fontSize: ScreenRatio_iPhone(16), lineHeight: ScreenRatio_iPhone(24), textAlign: "justify"}}>Each customer is entitled for free shipping for every order they have made (only applicable across Peninsula Malaysia).</Text>
+                        <Text style={{fontSize: ScreenRatio_iPhone(16), lineHeight: ScreenRatio_iPhone(24), textAlign: "justify"}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id diam maecenas ultricies mi eget mauris pharetra. Amet risus nullam eget felis eget nunc. Bibendum at varius vel pharetra vel turpis nunc. Aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc sed. Senectus et netus et malesuada fames. Nunc vel risus commodo viverra maecenas accumsan. Arcu bibendum at varius vel pharetra. Volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque in. Pulvinar elementum integer enim neque volutpat ac tincidunt vitae. Elit scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique senectus. Erat pellentesque adipiscing commodo elit. At erat pellentesque adipiscing commodo elit at imperdiet dui. Lorem donec massa sapien faucibus et molestie ac feugiat sed. Sit amet consectetur adipiscing elit. Malesuada fames ac turpis egestas maecenas pharetra convallis.</Text>
                     </CollapsibleList>
                 </View>
             </View>
         )
     }
 
+    // Add to wishlist/cart ...
+    function renderAddTo() {
+        return (
+            <LinearGradient
+                colors={['rgba(242, 242, 242, 0)', 'rgba(242, 242, 242, 1)']}
+                //colors={['red', 'green']}
+                start={{ x: 0, y: 0 }}
+                style={{
+                    position: "absolute",
+                    bottom: 0,
+                    zIndex: 3}}>
+                <SafeAreaView>
+                    <View style={{flexDirection: "row", marginHorizontal: ScreenRatio_iPhone(25)}}>
+                        <TouchableWithoutFeedback>
+                            <View style={{
+                                borderRadius: "50%",
+                                paddingHorizontal: ScreenRatio_iPhone(16),
+                                paddingVertical: ScreenRatio_iPhone(16),
+                                borderWidth: ScreenRatio_iPhone(2),
+                                borderColor: "#c2c2c2",
+                                marginEnd: ScreenRatio_iPhone(20)
+                            }}>
+                                <Image
+                                    source={require("../../assets/icons/wishlist.png")}
+                                    style={{
+                                        height: ScreenRatio_iPhone(24),
+                                        width: ScreenRatio_iPhone(24),
+                                    }}
+                                />
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <TouchableOpacity>
+                            <Text style={{
+                                backgroundColor: "black",
+                                color: "white",
+                                fontWeight: "500",
+                                //backgroundColor: (selectedShoe != null && selectedShoe.size == sizeNum) ? "#f58b4b" : "#e3e5ea",
+                                //color: (selectedShoe != null && selectedShoe.size == sizeNum) ? "white" : (product.sizes[sizeNum] == '0') ? "#93959e" : "black",
+                                paddingHorizontal: "24%",
+                                paddingVertical: ScreenRatio_iPhone(16),
+                                borderRadius: ScreenRatio_iPhone(32),
+                                fontSize: ScreenRatio_iPhone(22),
+                                overflow: "hidden",
+                                textAlign: "center",
+                            }}>Add to Cart
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </SafeAreaView>
+            </LinearGradient>
+        )
+    }
+
     return (
         <View>
             {renderHeader()}
-            <ScrollView>
+            <ScrollView style={{zIndex: 2}}>
                 {renderShoeImages()}
                 {renderShoeInfo()}
             </ScrollView>
+            {renderAddTo()}
         </View>
     )
 }
