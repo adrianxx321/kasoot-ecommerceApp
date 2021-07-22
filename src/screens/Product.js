@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView
 import { SafeAreaView } from "react-native-safe-area-context"
 import Animated from "react-native-reanimated"
 import Paginator from "../components/Paginator"
-import Accordion from 'react-native-collapsible/Accordion';
+import CollapsibleList from "../components/CollapsibleList"
 
 import 'intl';
 import 'intl/locale-data/jsonp/en';
@@ -28,86 +28,6 @@ const formatter = Intl.NumberFormat('en-UK',{
     style: "currency",
     currency: "MYR"
 })
-
-const SECTIONS = [
-    {
-        title: "Description",
-        content: product.prodDesc,
-    },
-    {
-        title: "Free Delivery and Returns",
-        content: "Each customer is entitled for free shipping for every order they have made (only applicable across Peninsula Malaysia).",
-    },
-]
-
-class AccordionView extends Component {
-    constructor(props) {
-        // Required step: always call the parent class' constructor
-        super(props);
-        this.state = {
-            activeSections: [],
-            collapsed: true,
-            multipleSelect: true,
-        }
-    }
-
-    toggleExpanded = () => {
-        this.setState({ collapsed: !this.state.collapsed })
-    }
-    renderHeader = (section, isActive) => {
-        return (
-            <View style={[styles.prodInfoAlignment, {marginHorizontal: 0}]}>
-                <Text style={{
-                    fontSize: ScreenRatio_iPhone(20),
-                    fontWeight: "600"
-                }}>{section.title}</Text>
-                <Image
-                    source={(isActive) ? require("../../assets/icons/chevron-up-outline.png") : require("../../assets/icons/chevron-down-outline.png")}
-                    style={{
-                        width: ScreenRatio_iPhone(24),
-                        height: ScreenRatio_iPhone(24)
-                    }}/>
-            </View>
-        )
-    }
-    renderContent = (section) => {
-        return (
-            <View style={{marginBottom: 15}}>
-                <Text style={{
-                    fontSize: ScreenRatio_iPhone(16),
-                    lineHeight: ScreenRatio_iPhone(24)
-                }}>{section.content}</Text>
-            </View>
-        )
-    }
-    updateSections = (activeSections) => {
-        this.setState({ activeSections })
-    }
-
-    render() {
-        const { activeSections } = this.state
-
-        return (
-            <Accordion
-                activeSections={activeSections}
-                sections={SECTIONS}
-                touchableComponent={TouchableWithoutFeedback}
-                sectionContainerStyle={{
-                    marginVertical: ScreenRatio_iPhone(15),
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#c2c2c2",
-                    marginHorizontal: ScreenRatio_iPhone(25)
-                }}
-                containerStyle={{marginVertical: ScreenRatio_iPhone(40)}}
-                renderHeader={this.renderHeader}
-                renderContent={this.renderContent}
-                onChange={this.updateSections}
-                toggleExpanded={this.toggleExpanded}
-                duration={350}
-            />
-        )
-    }
-}
 
 const Product = ({navigation}) => {
     // Back and "more options" buttons...
@@ -247,7 +167,7 @@ const Product = ({navigation}) => {
                                         paddingVertical: ScreenRatio_iPhone(22),
                                         marginHorizontal: ScreenRatio_iPhone(10),
                                         fontSize: ScreenRatio_iPhone(20),
-                                        borderRadius: 15,
+                                        borderRadius: ScreenRatio_iPhone(15),
                                         overflow: "hidden"
                                     }}>
                                     {size}
@@ -256,8 +176,25 @@ const Product = ({navigation}) => {
                         )
                     }
                 </ScrollView>
-                {/* Product description, delivery policies & reviewsß... */}
-                <AccordionView/>
+                {/* Product description, delivery policies & reviews... */}
+                <View style={{marginVertical: ScreenRatio_iPhone(30)}}>
+                    <CollapsibleList title={"Description"}>
+                        <Text style={styles.prodDescriptions}>{product.prodDesc}</Text>
+                    </CollapsibleList>
+                    <CollapsibleList title={"Free Delivery and Returns"}>
+                        <View style={{marginBottom: ScreenRatio_iPhone(20)}}>
+                            <Text style={[styles.prodDescriptions, {fontWeight: "bold"}]}>No returns, no refunds</Text>
+                            <Text style={styles.prodDescriptions}>Item is considered sold once payment has been made. Any request for refund, return or exchange will not be entertained except for the case of defective item.</Text>
+                        </View>
+                        <View>
+                            <Text style={[styles.prodDescriptions, {fontWeight: "bold"}]}>Free shipping</Text>
+                            <Text style={styles.prodDescriptions}>Each customer is entitled for free shipping for every order they have made (only applicable across Peninsula Malaysia).</Text>
+                        </View>
+                    </CollapsibleList>
+                    <CollapsibleList title={"See Reviews"}>
+                        <Text style={{fontSize: ScreenRatio_iPhone(16), lineHeight: ScreenRatio_iPhone(24), textAlign: "justify"}}>Each customer is entitled for free shipping for every order they have made (only applicable across Peninsula Malaysia).</Text>
+                    </CollapsibleList>
+                </View>
             </View>
         )
     }
@@ -287,6 +224,11 @@ const styles = StyleSheet.create({
         marginHorizontal: ScreenRatio_iPhone(25),
         marginBottom: ScreenRatio_iPhone(20),
         justifyContent: "space-between"
+    },
+    prodDescriptions: {
+        fontSize: ScreenRatio_iPhone(16),
+        lineHeight: ScreenRatio_iPhone(24),
+        textAlign: "justify"
     }
 })
 
