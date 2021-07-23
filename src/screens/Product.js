@@ -235,51 +235,51 @@ const Product = ({navigation}) => {
     function renderAddTo() {
         return (
             <LinearGradient
-                colors={['rgba(242, 242, 242, 0)', 'rgba(242, 242, 242, 1)']}
-                //colors={['red', 'green']}
-                start={{ x: 0, y: 0 }}
+                colors={['transparent', 'green']}
+                colors={['rgba(242, 242, 242, 0.9)', 'rgba(242, 242, 242, 1)']}
+                start={{ x: 0.5, y: -1 }}
                 style={{
                     position: "absolute",
                     bottom: 0,
-                    zIndex: 3}}>
-                <SafeAreaView>
-                    <View style={{flexDirection: "row", marginHorizontal: ScreenRatio_iPhone(25)}}>
-                        <TouchableWithoutFeedback>
-                            <View style={{
-                                borderRadius: "50%",
-                                paddingHorizontal: ScreenRatio_iPhone(16),
-                                paddingVertical: ScreenRatio_iPhone(16),
-                                borderWidth: ScreenRatio_iPhone(2),
-                                borderColor: "#c2c2c2",
-                                marginEnd: ScreenRatio_iPhone(20)
-                            }}>
-                                <Image
-                                    source={require("../../assets/icons/wishlist.png")}
-                                    style={{
-                                        height: ScreenRatio_iPhone(24),
-                                        width: ScreenRatio_iPhone(24),
-                                    }}
-                                />
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <TouchableOpacity>
-                            <Text style={{
-                                backgroundColor: "black",
-                                color: "white",
-                                fontWeight: "500",
-                                //backgroundColor: (selectedShoe != null && selectedShoe.size == sizeNum) ? "#f58b4b" : "#e3e5ea",
-                                //color: (selectedShoe != null && selectedShoe.size == sizeNum) ? "white" : (product.sizes[sizeNum] == '0') ? "#93959e" : "black",
-                                paddingHorizontal: "24%",
-                                paddingVertical: ScreenRatio_iPhone(16),
-                                borderRadius: ScreenRatio_iPhone(32),
-                                fontSize: ScreenRatio_iPhone(22),
-                                overflow: "hidden",
-                                textAlign: "center",
-                            }}>Add to Cart
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </SafeAreaView>
+                    paddingBottom: ScreenRatio_iPhone(25),
+                    zIndex: 3,
+                    width: "100%",
+                }}>
+                <View style={{flexDirection: "row", marginHorizontal: ScreenRatio_iPhone(25), justifyContent:"space-between"}}>
+                    <TouchableWithoutFeedback>
+                        <View style={{
+                            borderRadius: Dimensions.get("screen").height * 0.5,
+                            paddingHorizontal: ScreenRatio_iPhone(16),
+                            paddingVertical: ScreenRatio_iPhone(16),
+                            borderWidth: ScreenRatio_iPhone(2),
+                            borderColor: "#c2c2c2",
+                        }}>
+                            <Image
+                                source={require("../../assets/icons/wishlist.png")}
+                                style={{
+                                    height: ScreenRatio_iPhone(24),
+                                    width: ScreenRatio_iPhone(24),
+                                }}
+                            />
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableOpacity disabled={(selectedShoe == null) ? true : false}>
+                        <Text style={{
+                            backgroundColor: "black",
+                            color: "white",
+                            fontWeight: "500",
+                            backgroundColor: (selectedShoe != null) ? "#000000" : "#d6d6d6",
+                            color: (selectedShoe != null) ? "#ffffff" : "#93959e",
+                            paddingHorizontal: "24%",
+                            paddingVertical: ScreenRatio_iPhone(16),
+                            borderRadius: ScreenRatio_iPhone(32),
+                            fontSize: ScreenRatio_iPhone(22),
+                            overflow: "hidden",
+                            textAlign: "center",
+                        }}>Add to Cart
+                        </Text>
+                    </TouchableOpacity>
+                </View>               
             </LinearGradient>
         )
     }
@@ -287,7 +287,7 @@ const Product = ({navigation}) => {
     return (
         <View>
             {renderHeader()}
-            <ScrollView style={{zIndex: 2}}>
+            <ScrollView>
                 {renderShoeImages()}
                 {renderShoeInfo()}
             </ScrollView>
