@@ -35,6 +35,8 @@ const product = {
     }
 }
 
+const myWishList = []
+
 // Currency formatter
 const formatter = Intl.NumberFormat('en-UK',{
     style: "currency",
@@ -43,6 +45,7 @@ const formatter = Intl.NumberFormat('en-UK',{
 
 const Product = ({navigation}) => {
     const [selectedShoe, setSelectedShoe] = useState(null)
+    const [Wishlist, setWishList] = useState(myWishList)
 
     // Back and "more options" buttons ...
     function renderHeader() {
@@ -193,7 +196,7 @@ const Product = ({navigation}) => {
                                 <Text
                                     style={{
                                         backgroundColor: (selectedShoe != null && selectedShoe.size == sizeNum) ? "#f58b4b" : "#e3e5ea",
-                                        color: (selectedShoe != null && selectedShoe.size == sizeNum) ? "white" : (product.sizes[sizeNum] == '0') ? "#93959e" : "black",
+                                        color: (selectedShoe != null && selectedShoe.size == sizeNum) ? "#ffffff" : (product.sizes[sizeNum] == '0') ? "#93959e" : "#000000",
                                         paddingHorizontal: ScreenRatio_iPhone(26),
                                         paddingVertical: ScreenRatio_iPhone(20),
                                         marginHorizontal: ScreenRatio_iPhone(10),
@@ -245,8 +248,18 @@ const Product = ({navigation}) => {
                     zIndex: 3,
                     width: "100%",
                 }}>
-                <View style={{flexDirection: "row", marginHorizontal: ScreenRatio_iPhone(25), justifyContent:"space-between"}}>
-                    <TouchableWithoutFeedback>
+                <View style={{
+                        flexDirection: "row",
+                        marginHorizontal: ScreenRatio_iPhone(25),
+                        justifyContent:"space-between"
+                    }}>
+                    <TouchableWithoutFeedback
+                        onPress={() => {
+                            if (Wishlist.includes(product.prodID))
+                                setWishList(Wishlist.filter((e)=>(e !== product.prodID))) // remove
+                            else 
+                                setWishList([...Wishlist, product.prodID]) // add
+                        }}>
                         <View style={{
                             borderRadius: Dimensions.get("screen").height * 0.5,
                             paddingHorizontal: ScreenRatio_iPhone(16),
@@ -255,18 +268,23 @@ const Product = ({navigation}) => {
                             borderColor: "#c2c2c2",
                         }}>
                             <Image
-                                source={require("../../assets/icons/wishlist.png")}
+                                source={(Wishlist.includes(product.prodID) && Wishlist.length > 0) ? require("../../assets/icons/wishlist-selected.png") : require("../../assets/icons/wishlist.png")}
                                 style={{
                                     height: ScreenRatio_iPhone(24),
                                     width: ScreenRatio_iPhone(24),
+                                    tintColor: (Wishlist.includes(product.prodID)) ? "#e30022" : "#000000"
                                 }}
                             />
                         </View>
                     </TouchableWithoutFeedback>
-                    <TouchableOpacity disabled={(selectedShoe == null) ? true : false}>
+                    <TouchableOpacity
+                        disabled={(selectedShoe == null) ? true : false}
+                        onPress={() => {
+                            // To be implemented later ...
+                        }}>
                         <Text style={{
-                            backgroundColor: "black",
-                            color: "white",
+                            backgroundColor: "#000000",
+                            color: "#ffffff",
                             fontWeight: "500",
                             backgroundColor: (selectedShoe != null) ? "#000000" : "#d6d6d6",
                             color: (selectedShoe != null) ? "#ffffff" : "#93959e",
