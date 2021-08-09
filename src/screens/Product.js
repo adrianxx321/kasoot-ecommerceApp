@@ -51,7 +51,7 @@ const Product = ({navigation}) => {
     function renderHeader() {
         return (
             <SafeAreaView
-            style={{
+                style={{
                     zIndex: 3,
                     marginHorizontal: ScreenRatio_iPhone(15),
                     marginVertical: ScreenRatio_iPhone(15),
@@ -125,26 +125,12 @@ const Product = ({navigation}) => {
     function renderShoeInfo() {
         return (
             <View>
-                {/* Shoe category & rating... */}
+                {/* Shoe category... */}
                 <View style={styles.prodInfoAlignment}>
                     <Text style={{
                         fontSize: ScreenRatio_iPhone(18),
                         color: "#c2c2c2"
                     }}>{product.prodCat}</Text>
-                    <View style={{flexDirection: "row"}}>
-                        <Image 
-                            source={(product.rating > 0) ? require("../../assets/icons/star.png"): require("../../assets/icons/star-outline.png")}
-                            style={{
-                                width: ScreenRatio_iPhone(22),
-                                height: ScreenRatio_iPhone(22),
-                                tintColor: "#f58b4b",
-                                marginEnd: ScreenRatio_iPhone(5)
-                            }}/>
-                        <Text style={{
-                            fontSize: ScreenRatio_iPhone(18),
-                            color: "#c2c2c2"
-                        }}>({product.rating})</Text>
-                    </View>
                 </View>
                 {/* Shoe name & price... */}
                 <View style={styles.prodInfoAlignment}>
@@ -210,7 +196,7 @@ const Product = ({navigation}) => {
                         )
                     }
                 </ScrollView>
-                {/* Product description, delivery policies & reviews... */}
+                {/* Product description & delivery policies... */}
                 <View style={{marginVertical: ScreenRatio_iPhone(30)}}>
                     <CollapsibleList title={"Description"}>
                         <Text style={styles.prodDescriptions}>{product.prodDesc}</Text>
@@ -225,35 +211,26 @@ const Product = ({navigation}) => {
                             <Text style={styles.prodDescriptions}>Each customer is entitled for free shipping for every order they have made (only applicable across Peninsula Malaysia).</Text>
                         </View>
                     </CollapsibleList>
-                    {/* Reviews not implemented yet... */}
-                    <CollapsibleList title={"See Reviews"}>
-                        <Text style={{fontSize: ScreenRatio_iPhone(16), lineHeight: ScreenRatio_iPhone(24), textAlign: "justify"}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id diam maecenas ultricies mi eget mauris pharetra. Amet risus nullam eget felis eget nunc. Bibendum at varius vel pharetra vel turpis nunc. Aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc sed. Senectus et netus et malesuada fames. Nunc vel risus commodo viverra maecenas accumsan. Arcu bibendum at varius vel pharetra. Volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque in. Pulvinar elementum integer enim neque volutpat ac tincidunt vitae. Elit scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique senectus. Erat pellentesque adipiscing commodo elit. At erat pellentesque adipiscing commodo elit at imperdiet dui. Lorem donec massa sapien faucibus et molestie ac feugiat sed. Sit amet consectetur adipiscing elit. Malesuada fames ac turpis egestas maecenas pharetra convallis.</Text>
-                    </CollapsibleList>
                 </View>
             </View>
         )
     }
 
-    // Add to wishlist/cart ...
+    // Add to wishlist/cart...
     function renderAddTo() {
         return (
             <LinearGradient
-                colors={['transparent', 'green']}
                 colors={['rgba(242, 242, 242, 0.9)', 'rgba(242, 242, 242, 1)']}
                 start={{ x: 0.5, y: -1 }}
                 style={{
-                    position: "absolute",
-                    bottom: 0,
-                    paddingBottom: ScreenRatio_iPhone(25),
-                    zIndex: 3,
-                    width: "100%",
+                    bottom: ScreenRatio_iPhone(15),
                 }}>
                 <View style={{
                         flexDirection: "row",
-                        marginHorizontal: ScreenRatio_iPhone(25),
-                        justifyContent:"space-between"
+                        justifyContent:"space-evenly",
+                        height: "100%"
                     }}>
-                    <TouchableWithoutFeedback
+                    <TouchableOpacity
                         onPress={() => {
                             if (Wishlist.includes(product.prodID))
                                 setWishList(Wishlist.filter((e)=>(e !== product.prodID))) // remove
@@ -276,7 +253,7 @@ const Product = ({navigation}) => {
                                 }}
                             />
                         </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                     <TouchableOpacity
                         disabled={(selectedShoe == null) ? true : false}
                         onPress={() => {
@@ -308,8 +285,8 @@ const Product = ({navigation}) => {
             <ScrollView>
                 {renderShoeImages()}
                 {renderShoeInfo()}
+                {renderAddTo()}
             </ScrollView>
-            {renderAddTo()}
         </View>
     )
 }
