@@ -28,14 +28,6 @@ const Product = ({route, navigation}) => {
     // Dummy data
     product = dummyShoes.find(shoe => shoe.id == shoeID)
 
-    /*useEffect(() => {
-        firebase.firestore().collection('shoes').doc(shoeID).get()
-            .then((shoe)=>{
-                let currentShoe = shoe.data()
-                product = currentShoe
-            });
-    });*/
-
     // Back and "more options" buttons ...
     function renderHeader() {
         return (

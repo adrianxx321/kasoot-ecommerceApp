@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import ProductCard from "../components/ProductCard"
@@ -12,18 +12,15 @@ import {dummyShoes} from "../../assets/DUMMY/dummy"
 const SearchProductsScreen = ({navigation}) => {
     const [search, setSearch] = useState('Adidas')
     const [products, fetchProducts] = useState(dummyShoes)
-    
-    /*useEffect(() => {
-        firebase.firestore().collection('shoes').where("prodBrand", "==", search).get()
-            .then((querySnapshot)=>{            
-                let shoeArray = []  
-                querySnapshot.forEach((shoe) => {
-                    shoeArray.push(shoe.data());
-            });
-            fetchProducts(shoeArray)
-        });
-    })*/
 
+    useEffect(() => {
+        fetchData()
+
+        const willFocusSubscription = navigation.addListener('focus', () => {
+          fetchData();
+      })  
+    })
+    
     // Back and filter buttons ...
     function renderHeader() {
         return (
