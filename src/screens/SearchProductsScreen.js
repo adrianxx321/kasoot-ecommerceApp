@@ -1,63 +1,38 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
+import * as firebase from "firebase"
+import "firebase/firestore"
 import ProductCard from "../components/ProductCard"
 
 import 'intl'
 import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
-const products = [
-    {
-        prodName: "Adidas NMD Racer Primeknit",
-        prodID: "AH2430",
-        prodPrice: 749.9,
-        prodDiscount: 60,
-        prodBrand: "Adidas",
-        prodDesc: "Channeling the streamlined look of an '80s racer, these shoes are updated with modern features. The foot-hugging adidas Primeknit upper offers a soft, breathable feel. The Boost midsole provides responsive comfort accented with a contrast-color EVA heel plug. Embroidered details add a distinctive finish.",
-        prodImg: [require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_2.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_1.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_3.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_4.png")],
-        prodCat: "Women's Sneaker",
-        rating: 4.7,
-        sizeType: "UK",
-        sizes: {
-            4: 20,
-            5: 12,
-            6: 14,
-            7: 8,
-            8: 0,
-            9: 2,
-            10: 0,
-            11: 7,
-            12: 11
-        }
-    },
-    {
-        prodName: "Adidas NMD Racer Primeknit",
-        prodID: "AH2431",
-        prodPrice: 749.9,
-        prodDiscount: 60,
-        prodBrand: "Adidas",
-        prodDesc: "Channeling the streamlined look of an '80s racer, these shoes are updated with modern features. The foot-hugging adidas Primeknit upper offers a soft, breathable feel. The Boost midsole provides responsive comfort accented with a contrast-color EVA heel plug. Embroidered details add a distinctive finish.",
-        prodImg: [require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_2.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_1.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_3.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_4.png")],
-        prodCat: "Women's Sneaker",
-        rating: 4.7,
-        sizeType: "UK",
-        sizes: {
-            4: 20,
-            5: 12,
-            6: 14,
-            7: 8,
-            8: 0,
-            9: 2,
-            10: 0,
-            11: 7,
-            12: 11
-        }
-    },
-]
+// Initialize Firebase
+const firebaseConfig = {
+    apiKey: 'AIzaSyA3vh9VqlkPZfTEosvvRnTb8EW80A5aDGo',
+    authDomain: 'kasoot-1920c.firebaseapp.com',
+    projectId: 'kasoot-1920c',
+    databaseURL: 'https://kasoot-1920c.firebaseio.com',
+    storageBucket: 'kasoot-1920c.appspot.com',
+  };
+!firebase.apps.length ? firebase.initializeApp(firebaseConfig).firestore(): firebase.app().firestore()
+
 
 const SearchProductsScreen = ({navigation}) => {
     const [search, setSearch] = useState('Adidas NMD')
+    const [products, fetchProducts] = useState(Array())
+    
+    useEffect(() => {
+        firebase.firestore().collection('shoes').get().then((querySnapshot)=>{            
+            let shoeArray = []  
+            querySnapshot.forEach((shoe) => {
+                shoeArray.push(shoe.data());
+            });
+            fetchProducts(shoeArray)
+        });
+    })
 
     // Back and filter buttons ...
     function renderHeader() {
@@ -133,7 +108,7 @@ const SearchProductsScreen = ({navigation}) => {
 
     const renderProductCard = ({item}) => (
         <ProductCard
-            prodImg={item.prodImg}
+            prodImg={item.prodImg[0]}
             prodName={item.prodName}
             prodPrice={item.prodPrice}
             prodDiscount={item.prodDiscount}
@@ -148,7 +123,6 @@ const SearchProductsScreen = ({navigation}) => {
                 <FlatList
                     data={products}
                     renderItem={renderProductCard}
-                    keyExtractor={item => item.prodID}
                     style={{marginTop: ScreenRatio_iPhone(20), height: "100%"}}
                 />
             </View>

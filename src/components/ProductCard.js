@@ -23,7 +23,7 @@ const ProductCard = ({prodImg, prodName, prodPrice, prodDiscount}) => {
                     borderRadius: ScreenRatio_iPhone(40),
                 }}>
                 <Image 
-                    source={prodImg[0]}
+                    source={{uri: prodImg}}
                     style={{
                         width: ScreenRatio_iPhone(128),
                         height: ScreenRatio_iPhone(128),
