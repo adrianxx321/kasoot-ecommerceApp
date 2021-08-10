@@ -24,6 +24,7 @@ export default function App() {
     <NavigationContainer>
         <Stack.Navigator headerMode="none">
           <Stack.Screen name="Search Products" component={SearchProductsScreen} />
+          <Stack.Screen name="Product" component={Product} />
         </Stack.Navigator>
     </NavigationContainer>
   )
