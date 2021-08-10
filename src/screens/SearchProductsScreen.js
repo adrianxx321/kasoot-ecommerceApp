@@ -1,38 +1,28 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import * as firebase from "firebase"
-import "firebase/firestore"
 import ProductCard from "../components/ProductCard"
 
 import 'intl'
 import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
-// Initialize Firebase
-const firebaseConfig = {
-    apiKey: 'AIzaSyA3vh9VqlkPZfTEosvvRnTb8EW80A5aDGo',
-    authDomain: 'kasoot-1920c.firebaseapp.com',
-    projectId: 'kasoot-1920c',
-    databaseURL: 'https://kasoot-1920c.firebaseio.com',
-    storageBucket: 'kasoot-1920c.appspot.com',
-  };
-!firebase.apps.length ? firebase.initializeApp(firebaseConfig).firestore(): firebase.app().firestore()
-
+import {dummyShoes} from "../../assets/DUMMY/dummy"
 
 const SearchProductsScreen = ({navigation}) => {
-    const [search, setSearch] = useState('Adidas NMD')
-    const [products, fetchProducts] = useState(Array())
+    const [search, setSearch] = useState('Adidas')
+    const [products, fetchProducts] = useState(dummyShoes)
     
-    useEffect(() => {
-        firebase.firestore().collection('shoes').get().then((querySnapshot)=>{            
-            let shoeArray = []  
-            querySnapshot.forEach((shoe) => {
-                shoeArray.push(shoe.data());
+    /*useEffect(() => {
+        firebase.firestore().collection('shoes').where("prodBrand", "==", search).get()
+            .then((querySnapshot)=>{            
+                let shoeArray = []  
+                querySnapshot.forEach((shoe) => {
+                    shoeArray.push(shoe.data());
             });
             fetchProducts(shoeArray)
         });
-    })
+    })*/
 
     // Back and filter buttons ...
     function renderHeader() {
@@ -49,7 +39,7 @@ const SearchProductsScreen = ({navigation}) => {
                         right: 0,
                 }}>
                 <TouchableOpacity
-                    onpress={() => navigation.goBack()}>
+                    onPress={() => {}}>
                     <Image
                         source={require("../../assets/icons/back.png")}
                         resizeMode="contain"
@@ -58,7 +48,7 @@ const SearchProductsScreen = ({navigation}) => {
                 </TouchableOpacity>
                 <View style={{flexDirection: "row"}}>
                     <TouchableOpacity
-                        onpress={() => {}}>
+                        onPress={() => {}}>
                         <Image
                             source={require("../../assets/icons/search.png")}
                             resizeMode="contain"
@@ -68,7 +58,7 @@ const SearchProductsScreen = ({navigation}) => {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onpress={() => {}}>
+                        onPress={() => {}}>
                         <View style={{
                             backgroundColor: "black",
                             paddingEnd: ScreenRatio_iPhone(20),
@@ -108,17 +98,20 @@ const SearchProductsScreen = ({navigation}) => {
 
     const renderProductCard = ({item}) => (
         <ProductCard
+            prodID={item.id}
             prodImg={item.prodImg[0]}
+            prodBrand={item.prodBrand}
             prodName={item.prodName}
             prodPrice={item.prodPrice}
             prodDiscount={item.prodDiscount}
+            key={item.id}
         />
     )
 
     return (
         <View>
             {renderHeader()}
-            <View style={{top: 128}}>
+            <View style={{marginVertical: ScreenRatio_iPhone(128)}}>
                 {renderTitle()}
                 <FlatList
                     data={products}

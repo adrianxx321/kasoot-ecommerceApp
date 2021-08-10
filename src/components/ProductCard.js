@@ -1,18 +1,27 @@
-import React from "react"
+import React, { useState } from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, TouchableWithoutFeedback } from "react-native"
+import { useNavigation } from "@react-navigation/native";
 
 import 'intl';
 import 'intl/locale-data/jsonp/en';
 import { ScreenRatio_iPhone } from "./ScreenRatio-iPhone"
 
-const formatter = Intl.NumberFormat('en-UK',{
+import { dummyWishList } from "../../assets/DUMMY/dummy";
+
+const formatter = Intl.NumberFormat('en-UK', {
     style: "currency",
     currency: "MYR"
 })
 
-const ProductCard = ({prodImg, prodName, prodPrice, prodDiscount}) => {
+const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDiscount}) => {
+    const navigation = useNavigation()
+    const [wishlist, setWishlist] = useState(dummyWishList)
+    
     return (
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+            onPress={() => {
+                navigation.navigate("Product", {shoeID: prodID})
+            }}>
             <View
                 style={{
                     flexDirection: "row",
@@ -35,9 +44,10 @@ const ProductCard = ({prodImg, prodName, prodPrice, prodDiscount}) => {
                     flexShrink: 1,
                     marginLeft: ScreenRatio_iPhone(16),
                     marginTop: ScreenRatio_iPhone(12),
+                    width: "100%"
                 }}>
                     <Text style={[styles.cardText, {fontWeight: "bold", lineHeight: ScreenRatio_iPhone(22)}]}>
-                        {prodName}
+                        {prodBrand} {prodName}
                     </Text>
                     <Text style={[styles.cardText, {textDecorationLine: (prodDiscount) ? "line-through" : "none"}]}>
                         {formatter.format(prodPrice)}
@@ -46,13 +56,24 @@ const ProductCard = ({prodImg, prodName, prodPrice, prodDiscount}) => {
                         {formatter.format(prodPrice * (1 - prodDiscount / 100))}
                     </Text>
                 </View>
-                <View style={{marginHorizontal: ScreenRatio_iPhone(16), justifyContent: "center"}}>
-                    <TouchableOpacity>
+                <View style={{marginEnd: ScreenRatio_iPhone(16), justifyContent: "center"}}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (wishlist.includes(prodID)) {
+                                setWishlist(wishlist.filter((e)=>(e !== prodID))) // remove
+                                //dummyWishList = dummyWishList.filter((e)=>(e !== prodID))
+                            }
+                            else {
+                                setWishlist([...wishlist, prodID]) // add
+                                //dummyWishList.push(prodID)
+                            }
+                        }}>
                         <Image 
-                            source={require("../../assets/icons/wishlist.png")}
+                            source={(wishlist.includes(prodID) && wishlist.length > 0) ? require("../../assets/icons/wishlist-selected.png") : require("../../assets/icons/wishlist.png")}
                             style={{
                                 width: ScreenRatio_iPhone(24),
                                 height: ScreenRatio_iPhone(24),
+                                tintColor: (wishlist.includes(prodID)) ? "#e30022" : "#000000"
                             }}
                         />
                     </TouchableOpacity>

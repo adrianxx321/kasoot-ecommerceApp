@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView, TouchableWithoutFeedback } from "react-native"
+import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Animated from "react-native-reanimated"
 import Paginator from "../components/Paginator"
@@ -10,42 +10,31 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
-// Dummy data
-const product = {
-    prodName: "Adidas NMD Racer Primeknit",
-    prodID: "AH2430",
-    prodPrice: 749.9,
-    prodDiscount: 60,
-    prodBrand: "Adidas",
-    prodDesc: "Channeling the streamlined look of an '80s racer, these shoes are updated with modern features. The foot-hugging adidas Primeknit upper offers a soft, breathable feel. The Boost midsole provides responsive comfort accented with a contrast-color EVA heel plug. Embroidered details add a distinctive finish.",
-    prodImg: [require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_2.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_1.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_3.png"), require("../../assets/DUMMY/WOMEN_Originals_SHOES_LOW_AH2430_4.png")],
-    prodCat: "Women's Sneaker",
-    rating: 4.7,
-    sizeType: "UK",
-    sizes: {
-        4: 20,
-        5: 12,
-        6: 14,
-        7: 8,
-        8: 0,
-        9: 2,
-        10: 0,
-        11: 7,
-        12: 11
-    }
-}
+import {dummyShoes, dummyWishList} from "../../assets/DUMMY/dummy"
 
-const myWishList = []
+let product = null
 
 // Currency formatter
-const formatter = Intl.NumberFormat('en-UK',{
+const formatter = Intl.NumberFormat('en-UK', {
     style: "currency",
     currency: "MYR"
 })
 
-const Product = ({navigation}) => {
+const Product = ({route, navigation}) => {
+    const {shoeID} = route.params
     const [selectedShoe, setSelectedShoe] = useState(null)
-    const [Wishlist, setWishList] = useState(myWishList)
+    const [wishlist, setWishlist] = useState(dummyWishList)
+    
+    // Dummy data
+    product = dummyShoes.find(shoe => shoe.id == shoeID)
+
+    /*useEffect(() => {
+        firebase.firestore().collection('shoes').doc(shoeID).get()
+            .then((shoe)=>{
+                let currentShoe = shoe.data()
+                product = currentShoe
+            });
+    });*/
 
     // Back and "more options" buttons ...
     function renderHeader() {
@@ -62,7 +51,7 @@ const Product = ({navigation}) => {
                     right: 0
                 }}>
                 <TouchableOpacity
-                    onpress={() => navigation.goBack()}>
+                    onPress={() => navigation.goBack()}>
                     <Image
                         source={require("../../assets/icons/back.png")}
                         resizeMode="contain"
@@ -70,7 +59,7 @@ const Product = ({navigation}) => {
                     />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onpress={() => {}}>
+                    onPress={() => {}}>
                     <Image
                         source={require("../../assets/icons/more-options.png")}
                         resizeMode="contain"
@@ -112,7 +101,7 @@ const Product = ({navigation}) => {
                                     resizeMode: "contain",
                                     marginVertical: Dimensions.get("window").height * 0.05
                                 }}
-                                source={imgPath}/>
+                                source={{uri: imgPath}}/>
                         )
                     }
                 </Animated.ScrollView>
@@ -137,8 +126,8 @@ const Product = ({navigation}) => {
                     <Text style={{
                         fontSize: ScreenRatio_iPhone(24),
                         fontWeight: "500",
-                        width: "70%"
-                    }}>{product.prodName}</Text>
+                        width: ScreenRatio_iPhone(Dimensions.get("window").width * 0.55),
+                    }}>{product.prodBrand} {product.prodName}</Text>
                     <View>
                         <Text style={{
                             fontSize: ScreenRatio_iPhone(20),
@@ -223,19 +212,27 @@ const Product = ({navigation}) => {
                 colors={['rgba(242, 242, 242, 0.9)', 'rgba(242, 242, 242, 1)']}
                 start={{ x: 0.5, y: -1 }}
                 style={{
-                    bottom: ScreenRatio_iPhone(15),
+                    position: "absolute",
+                    bottom: 0,
+                    paddingBottom: ScreenRatio_iPhone(28),
+                    zIndex: 3,
+                    width: "100%",
                 }}>
                 <View style={{
                         flexDirection: "row",
-                        justifyContent:"space-evenly",
-                        height: "100%"
+                        marginHorizontal: ScreenRatio_iPhone(25),
+                        justifyContent:"space-between",
                     }}>
                     <TouchableOpacity
                         onPress={() => {
-                            if (Wishlist.includes(product.prodID))
-                                setWishList(Wishlist.filter((e)=>(e !== product.prodID))) // remove
-                            else 
-                                setWishList([...Wishlist, product.prodID]) // add
+                            if (wishlist.includes(product.id)) {
+                                setWishlist(wishlist.filter((e)=>(e !== product.id))) // remove
+                                // dummyWishList = dummyWishList.filter((e)=>(e !== product.id))
+                            }
+                            else {
+                                setWishlist([...wishlist, product.id]) // add
+                                // dummyWishList.push(product.id)
+                            }
                         }}>
                         <View style={{
                             borderRadius: Dimensions.get("screen").height * 0.5,
@@ -245,11 +242,11 @@ const Product = ({navigation}) => {
                             borderColor: "#c2c2c2",
                         }}>
                             <Image
-                                source={(Wishlist.includes(product.prodID) && Wishlist.length > 0) ? require("../../assets/icons/wishlist-selected.png") : require("../../assets/icons/wishlist.png")}
+                                source={(wishlist.includes(product.id) && wishlist.length > 0) ? require("../../assets/icons/wishlist-selected.png") : require("../../assets/icons/wishlist.png")}
                                 style={{
                                     height: ScreenRatio_iPhone(24),
                                     width: ScreenRatio_iPhone(24),
-                                    tintColor: (Wishlist.includes(product.prodID)) ? "#e30022" : "#000000"
+                                    tintColor: (wishlist.includes(product.id)) ? "#e30022" : "#000000"
                                 }}
                             />
                         </View>
@@ -282,11 +279,11 @@ const Product = ({navigation}) => {
     return (
         <View>
             {renderHeader()}
-            <ScrollView>
+            <ScrollView style={{height: "100%"}}>
                 {renderShoeImages()}
                 {renderShoeInfo()}
-                {renderAddTo()}
             </ScrollView>
+            {renderAddTo()}
         </View>
     )
 }
