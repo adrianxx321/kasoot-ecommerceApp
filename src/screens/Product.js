@@ -12,7 +12,6 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
-import {dummyWishList} from "../../assets/DUMMY/dummy"
 import Toast from "react-native-toast-message"
 // Currency formatter
 const formatter = Intl.NumberFormat('en-UK', {
@@ -326,7 +325,7 @@ const Product = ({route, navigation}) => {
                                     quantity: 1,
                                     size: selectedSize
                                 })
-
+                                
                                 setCart(newCart)
                                 FirebaseServices.addToCart("caXHZssX32hRElZez1uFRd7LTIN2", newCart[newCart.length - 1])
                             }
