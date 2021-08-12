@@ -13,6 +13,7 @@ import 'intl/locale-data/jsonp/en';
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
 import {dummyWishList} from "../../assets/DUMMY/dummy"
+import Toast from "react-native-toast-message"
 // Currency formatter
 const formatter = Intl.NumberFormat('en-UK', {
     style: "currency",
@@ -329,6 +330,14 @@ const Product = ({route, navigation}) => {
                                 setCart(newCart)
                                 FirebaseServices.addToCart("caXHZssX32hRElZez1uFRd7LTIN2", newCart[newCart.length - 1])
                             }
+                            Toast.show({
+                                type: "success",
+                                position: "bottom",
+                                text1: "Item added to cart!",
+                                text2: "Enjoy your shopping!", 
+                                visibilityTime: 1000,
+                                bottomOffset: ScreenRatio_iPhone(128),
+                            })
                         }}>
                         <Text style={{
                             backgroundColor: "#000000",
@@ -350,6 +359,12 @@ const Product = ({route, navigation}) => {
         )
     }
 
+    const addToCartToast = () => {
+        return (
+            <Toast ref={(ref => Toast.setRef(ref))}/>
+        )
+    }
+
     if(loading) {
         return <View></View>
     }
@@ -362,6 +377,7 @@ const Product = ({route, navigation}) => {
                     {renderShoeInfo()}
                 </ScrollView>
                 {renderAddTo()}
+                {addToCartToast()}
             </View>
         )
     }
