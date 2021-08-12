@@ -5,11 +5,12 @@ import "firebase/auth";
 // Initialize database
 const firebaseConfig = {
     apiKey: 'AIzaSyA3vh9VqlkPZfTEosvvRnTb8EW80A5aDGo',
+    private_key: "-----BEGIN PRIVATE KEY-----\nMIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQCnCILZfQqkSNdC\nKjd+u2FPoQM9TT0suX7u00Q6t8Mhtl15EpDdbaMV9l0Qv05WDnDapjWLwjc6RZB4\nyYhc6rcWmZ0XhQxX8LpLe+zEk8QgV8iBE0v4keIbszqaNbiseyLvovlUl1QiP37T\nM+udcdEIWIOjcj1bNf7WK8qtVP784LFveULqjq00Z4Q4V+RKahnMnKqY/ILvjnHa\nmzmE+JzdLpwWlGAqxtMB2AqPGfLv8ZKAfi5EvXASuXkGgNnyn9He4PpbwefpAPMz\nsCLlG67XsILaUmGiDFWTS4BDGNSC//yUiT2Gx+5TkSJPGLP7q5rwU+4OCquchSl4\nx/Bg2Xr7AgMBAAECgf9H/S2ym1FPNI0DcX23frKGHh2hbHWUyHSwTRsDYqGAg/fb\nGCXtx28M0Z4IFlI6mkAmGinHRE00PKN+V/CFE1cYHraHhlOsA6WtMgA/KWvilwHQ\nkdKZ/1cdbYc56HzjjeCIOaJp7dkcJnU3eGVim23Rg/jHvBF+hMeYIcAfwcsZt4tP\n5u3ryTprtldLF2rcRXV2p1IaAEsq6gqNzSkXkPV5ZZoFNIUTPW2T4VZIZ2mMJGif\ne5edFaBJTf449i/qz1WVcM67tPKzy5/K4WDJJ9iZLzUdvFW2v+wF/4Fq/fW1TJNh\npMCd12Vht0/1pbBDT7ps1w2vHwtl9q+FoxTm6vECgYEA4I05vjwuEZAtDeXvOo3N\nHHW0rhjlwcrBi/ElqChVnyw8pmb5cCRvwj0JGdI2q3kdhKdkz5n/KsOFwYvhaLmD\nY+0QQ3+7GRjyTk6/l4PQHTce/uqgTyMIxntawOzWIRFl8wUScHCV9pKYEdRZUHLX\ndt2bWBDhhS4+GbaETnF3YYsCgYEAvm0Y7IdoEgIcp4XO5g9NiGX8pVzjJCBhRv5A\n+XZrJ/mreYGzdN2LXK1mk8eGJGoku/5cLtjzdvVHk26AoWl9I6cctkTMfFKRySCS\nycf3tB3vf3ueVC2EKXkGJRdVfpI6YSDFRN/w9jtsuWrS1F4Xg/7h38jowvGDQqUI\nbdzymlECgYEAhjrlsZo3z7fnts8kWlQ5sDGMeCXZ8iZJ3GWipQq3ZBcFilMz+J1P\nUUU7E3xdwdL8mjeWQ6NCrUWDx1bev8Nlj24+sprANRh8f+MDFIdu+Ifit295tNS0\ngjFq5risp8fGsabuhthGTMcEsGPHoBeGRT/jhJlStlIWPTiljl61hlECgYBR3nWo\nu05y75WCMHUTU+Dxk2dbcOP21DT+YLFujwri1OR0CN8uj1ErNyGyx0VUwo2ohWL8\ngSmrKyjqqceDnea/PUmK02lWyekDn418Uwyb04L0PCGF70uyyOVrbOzEzflraLtn\nMSBXvJSx4stholJZ3Wse2zG3Hj5gmLNXCHcFAQKBgGf3Y9qJqH6JXUDxm43HOShY\nnnsLA9T4hKj1zFVVMN9Dm1k3sJKSJfof/WPovcAX3a6lUL+4q0IOCaOX3Z69q13S\nbEVwKnrrkVgkxzKHVBT1wiEU4BZAwccwR1GiRnAj3+2FLOxW6MziYiVXi1fkodUe\nCc8giMj7QqZjmFmt6k7u\n-----END PRIVATE KEY-----\n",
     authDomain: 'kasoot-1920c.firebaseapp.com',
     projectId: 'kasoot-1920c',
     databaseURL: 'https://kasoot-1920c.firebaseio.com',
     storageBucket: 'kasoot-1920c.appspot.com',
-};
+}
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig)
 }
@@ -21,4 +22,32 @@ const db = firebase.firestore()
 
 export const getShoe = (shoeID) => {
     return db.collection("shoes").doc(shoeID)
+}
+
+export const getWishlist = (uid) => {
+    return db.collection("wishlist").doc(uid)
+}
+
+export const addToWishlist = async (uid, prodID) => {
+    const response = await getWishlist(uid)
+
+    try {
+        response.update({
+            products: firebase.firestore.FieldValue.arrayUnion(prodID)
+        });
+    } catch(err) {
+        console.error(err)
+    }
+}
+
+export const removeFromWishlist = async (uid, prodID) => {
+    const response = await getWishlist(uid)
+
+    try {
+        response.update({
+            products: firebase.firestore.FieldValue.arrayRemove(prodID)
+        });
+    } catch(err) {
+        console.error(err)
+    }
 }
