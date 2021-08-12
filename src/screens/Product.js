@@ -44,7 +44,9 @@ const Product = ({route, navigation}) => {
             const response = await FirebaseServices.getWishlist(uid).get()
 
             if(response.exists) {
-                setWishlist(response.data().products)
+                if(response.data().hasOwnProperty("products")) {
+                    setWishlist(response.data().products)
+                }
             }
         } catch(err) {
             console.error(err)
@@ -288,6 +290,7 @@ const Product = ({route, navigation}) => {
                         disabled={(selectedShoe == null) ? true : false}
                         onPress={() => {
                             // To be implemented later ...
+                            
                         }}>
                         <Text style={{
                             backgroundColor: "#000000",
