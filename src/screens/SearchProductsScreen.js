@@ -9,7 +9,7 @@ import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
 const SearchProductsScreen = ({navigation}) => {
-    const [search, setSearch] = useState("women")
+    const [search, setSearch] = useState("nike")
     const [products, fetchProducts] = useState([])
     const queryProducts = async() => {
         try {
