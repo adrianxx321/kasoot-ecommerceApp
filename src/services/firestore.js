@@ -1,4 +1,4 @@
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
@@ -10,14 +10,15 @@ const firebaseConfig = {
     databaseURL: 'https://kasoot-1920c.firebaseio.com',
     storageBucket: 'kasoot-1920c.appspot.com',
 };
-firebase.initializeApp(firebaseConfig)
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig)
+}
+else {
+    firebase.app()
+}
 
 const db = firebase.firestore()
 
-export const getShoesQuery = (searchTerm) => {
-    return db.collection('shoes').where("prodName", "array-contains", searchTerm).get()
-}
-
 export const getShoe = (shoeID) => {
-    return db.collection('shoes').doc(shoeID).get()
+    return db.collection("shoes").doc(shoeID)
 }
