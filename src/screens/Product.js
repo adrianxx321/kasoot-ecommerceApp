@@ -96,14 +96,6 @@ const Product = ({route, navigation}) => {
                         style={styles.headerButtons}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => {}}>
-                    <Image
-                        source={require("../../assets/icons/more-options.png")}
-                        resizeMode="contain"
-                        style={styles.headerButtons}
-                    />
-                </TouchableOpacity>
             </SafeAreaView>
         )
     }
