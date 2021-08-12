@@ -51,3 +51,31 @@ export const removeFromWishlist = async (uid, prodID) => {
         console.error(err)
     }
 }
+
+export const getCart = (uid) => {
+    return db.collection("cart").doc(uid)
+}
+
+export const addToCart = async (uid, newCart) => {
+    const response = await getCart(uid)
+
+    try {
+        response.update({
+            cart: firebase.firestore.FieldValue.arrayUnion(newCart)
+        })
+    } catch(err) {
+        console.error(err)
+    }
+}
+
+export const addToCartDup = async (uid, newCart) => {
+    const response = await getCart(uid)
+
+    try {
+        response.set({
+            cart: newCart
+        })
+    } catch(err) {
+        console.error(err)
+    }
+}

@@ -23,8 +23,9 @@ const Product = ({route, navigation}) => {
     const {shoeID} = route.params
     const [loading, setLoading] = useState(true)
     const [product, setProduct] = useState(null)
-    const [selectedShoe, setSelectedShoe] = useState(null)
+    const [selectedSize, setSelectedSize] = useState(null)
     const [wishlist, setWishlist] = useState([])
+    const [cart, setCart] = useState([])
 
     const fetchProduct = async (shoeID) => {
         try {
@@ -53,9 +54,24 @@ const Product = ({route, navigation}) => {
         }
     }
 
+    const fetchCart = async (uid) => {
+        try {
+            const response = await FirebaseServices.getCart(uid).get()
+
+            if(response.exists) {
+                if(response.data().hasOwnProperty("cart")) {
+                    setCart(response.data().cart)
+                }
+            }
+        } catch(err) {
+            console.error(err)
+        }
+    }
+
     useEffect(() => {
         fetchProduct(shoeID)
         fetchWishlist("caXHZssX32hRElZez1uFRd7LTIN2")
+        fetchCart("caXHZssX32hRElZez1uFRd7LTIN2")
     }, [])
 
     // Back and "more options" buttons ...
@@ -198,13 +214,13 @@ const Product = ({route, navigation}) => {
                             <TouchableOpacity
                                 key={`${product.prodID}-${index}`}
                                 onPress={() => {
-                                    setSelectedShoe({ID: product.prodID, size: sizeNum})
+                                    setSelectedSize(sizeNum)
                                 }}
                                 disabled={(product.sizes[sizeNum] != '0') ? false : true}>
                                 <Text
                                     style={{
-                                        backgroundColor: (selectedShoe != null && selectedShoe.size == sizeNum) ? "#f58b4b" : "#e3e5ea",
-                                        color: (selectedShoe != null && selectedShoe.size == sizeNum) ? "#ffffff" : (product.sizes[sizeNum] == '0') ? "#93959e" : "#000000",
+                                        backgroundColor: (selectedSize != null && selectedSize == sizeNum) ? "#f58b4b" : "#e3e5ea",
+                                        color: (selectedSize != null && selectedSize == sizeNum) ? "#ffffff" : (product.sizes[sizeNum] == '0') ? "#93959e" : "#000000",
                                         paddingHorizontal: ScreenRatio_iPhone(26),
                                         paddingVertical: ScreenRatio_iPhone(20),
                                         marginHorizontal: ScreenRatio_iPhone(10),
@@ -287,17 +303,39 @@ const Product = ({route, navigation}) => {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        disabled={(selectedShoe == null) ? true : false}
+                        disabled={(selectedSize == null) ? true : false}
                         onPress={() => {
-                            // To be implemented later ...
-                            
+                            const index = cart.findIndex(item => {
+                                return (item.prodID == shoeID && item.size == selectedSize)
+                            })
+                            let newCart = cart
+
+                            if (index != -1) {
+                                // Modify current cart array and send back to database
+                                newCart[index].quantity += 1
+                                console.log(newCart)
+
+                                setCart(newCart)
+                                FirebaseServices.addToCartDup("caXHZssX32hRElZez1uFRd7LTIN2", newCart)
+                            }
+                            else {
+                                // Add new cart item to dataabse
+                                newCart.push({
+                                    prodID: shoeID,
+                                    quantity: 1,
+                                    size: selectedSize
+                                })
+
+                                setCart(newCart)
+                                FirebaseServices.addToCart("caXHZssX32hRElZez1uFRd7LTIN2", newCart[newCart.length - 1])
+                            }
                         }}>
                         <Text style={{
                             backgroundColor: "#000000",
                             color: "#ffffff",
                             fontWeight: "500",
-                            backgroundColor: (selectedShoe != null) ? "#000000" : "#d6d6d6",
-                            color: (selectedShoe != null) ? "#ffffff" : "#93959e",
+                            backgroundColor: (selectedSize != null) ? "#000000" : "#d6d6d6",
+                            color: (selectedSize != null) ? "#ffffff" : "#93959e",
                             paddingHorizontal: "24%",
                             paddingVertical: ScreenRatio_iPhone(16),
                             borderRadius: ScreenRatio_iPhone(32),
