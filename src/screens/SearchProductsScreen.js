@@ -1,28 +1,36 @@
 import React, { useState, useEffect } from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
+import * as algolia from "../services/algolia"
 import ProductCard from "../components/ProductCard"
 
 import 'intl'
 import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
-import {dummyShoes} from "../../assets/DUMMY/dummy"
-
 const SearchProductsScreen = ({navigation}) => {
-    const [search, setSearch] = useState('Adidas')
-    const [products, fetchProducts] = useState(dummyShoes)
+    const [search, setSearch] = useState('')
+    const [products, fetchProducts] = useState([])
+    const queryProducts = async() => {
+        try {
+            const response = await algolia.getShoesQuery(search)
+
+            if(response.length > 0) {
+                fetchProducts(response)
+            }
+        } catch(err) {
+            console.error(err)
+        }
+    }
 
     useEffect(() => {
-        fetchData()
+        // Fetch products (not from Firebase)
+        queryProducts()
 
-        const willFocusSubscription = navigation.addListener('focus', () => {
-          fetchData();
-      })  
-    })
+    }, [])
     
     // Back and filter buttons ...
-    function renderHeader() {
+    const renderHeader = () => {
         return (
             <SafeAreaView
                 style={{
@@ -82,7 +90,7 @@ const SearchProductsScreen = ({navigation}) => {
         )
     }
 
-    function renderTitle() {
+    const renderTitle = () => {
         return (
             <View style={{
                 marginHorizontal: ScreenRatio_iPhone(25),
@@ -95,13 +103,13 @@ const SearchProductsScreen = ({navigation}) => {
 
     const renderProductCard = ({item}) => (
         <ProductCard
-            prodID={item.id}
+            prodID={item.objectID}
             prodImg={item.prodImg[0]}
             prodBrand={item.prodBrand}
             prodName={item.prodName}
             prodPrice={item.prodPrice}
             prodDiscount={item.prodDiscount}
-            key={item.id}
+            key={item.objectID}
         />
     )
 
@@ -113,6 +121,7 @@ const SearchProductsScreen = ({navigation}) => {
                 <FlatList
                     data={products}
                     renderItem={renderProductCard}
+                    keyExtractor={item => item.objectID}
                     style={{marginTop: ScreenRatio_iPhone(20), height: "100%"}}
                 />
             </View>
@@ -134,6 +143,5 @@ const styles = StyleSheet.create({
         lineHeight: ScreenRatio_iPhone(44),
     }
 })
-
 
 export default SearchProductsScreen

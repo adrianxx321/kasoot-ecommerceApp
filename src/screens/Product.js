@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Animated from "react-native-reanimated"
@@ -6,14 +6,13 @@ import Paginator from "../components/Paginator"
 import CollapsibleList from "../components/CollapsibleList"
 import { LinearGradient } from "expo-linear-gradient"
 
+import * as FirebaseServices from "../services/firestore"
+
 import 'intl';
 import 'intl/locale-data/jsonp/en';
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
-import {dummyShoes, dummyWishList} from "../../assets/DUMMY/dummy"
-
-let product = null
-
+import {dummyWishList} from "../../assets/DUMMY/dummy"
 // Currency formatter
 const formatter = Intl.NumberFormat('en-UK', {
     style: "currency",
@@ -22,14 +21,37 @@ const formatter = Intl.NumberFormat('en-UK', {
 
 const Product = ({route, navigation}) => {
     const {shoeID} = route.params
+    const [loading, setLoading] = useState(true)
+    const [product, setProduct] = useState(null)
     const [selectedShoe, setSelectedShoe] = useState(null)
     const [wishlist, setWishlist] = useState(dummyWishList)
-    
-    // Dummy data
-    product = dummyShoes.find(shoe => shoe.id == shoeID)
+    const fetchProduct = async (shoeID) => {
+        try {
+            const response = await FirebaseServices.getShoe(shoeID).get()
+
+            if(response.exists) {
+                return response.data()
+            }
+            else {
+                return null
+            }
+        } catch(err) {
+            console.error(err)
+        }
+    }
+
+    useEffect(() => {
+        fetchProduct(shoeID).then(result => {
+            let data = result
+            console.log(data)
+            setProduct(data)
+            setLoading(false)
+        })
+
+    }, [])
 
     // Back and "more options" buttons ...
-    function renderHeader() {
+    const renderHeader = () => {
         return (
             <SafeAreaView
                 style={{
@@ -61,9 +83,9 @@ const Product = ({route, navigation}) => {
             </SafeAreaView>
         )
     }
-
+    
     // Product images (carousell) ...
-    function renderShoeImages() {
+    const renderShoeImages = () => {
         const scrollX = new Animated.Value(0)
         
         return (
@@ -103,7 +125,18 @@ const Product = ({route, navigation}) => {
     }
 
     // Product information (name, price, rating, description etc.) ...
-    function renderShoeInfo() {
+    const renderShoeInfo = () => {
+        const highlightSizeType = (sizeType) => {
+            return StyleSheet.create({
+                selectedSizeType: {
+                    fontSize: ScreenRatio_iPhone(18),
+                    marginEnd: ScreenRatio_iPhone(10),
+                    color: (sizeType == product.sizeType) ? "#000000" : "#c2c2c2",
+                    fontWeight: (sizeType == product.sizeType) ? "600" : "400"
+                }
+            })
+        }
+
         return (
             <View>
                 {/* Shoe category... */}
@@ -198,7 +231,7 @@ const Product = ({route, navigation}) => {
     }
 
     // Add to wishlist/cart...
-    function renderAddTo() {
+    const renderAddTo = () => {
         return (
             <LinearGradient
                 colors={['rgba(242, 242, 242, 0.9)', 'rgba(242, 242, 242, 1)']}
@@ -206,7 +239,7 @@ const Product = ({route, navigation}) => {
                 style={{
                     position: "absolute",
                     bottom: 0,
-                    paddingBottom: ScreenRatio_iPhone(28),
+                    paddingVertical: ScreenRatio_iPhone(28),
                     zIndex: 3,
                     width: "100%",
                 }}>
@@ -268,16 +301,21 @@ const Product = ({route, navigation}) => {
         )
     }
 
-    return (
-        <View>
-            {renderHeader()}
-            <ScrollView style={{height: "100%"}}>
-                {renderShoeImages()}
-                {renderShoeInfo()}
-            </ScrollView>
-            {renderAddTo()}
-        </View>
-    )
+    if(loading) {
+        return <View></View>
+    }
+    else {
+        return (
+            <View>
+                {renderHeader()}
+                <ScrollView style={{height: "100%"}}>
+                    {renderShoeImages()}
+                    {renderShoeInfo()}
+                </ScrollView>
+                {renderAddTo()}
+            </View>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
@@ -301,16 +339,5 @@ const styles = StyleSheet.create({
         textAlign: "justify"
     }
 })
-
-function highlightSizeType(sizeType) {
-    return StyleSheet.create({
-        selectedSizeType: {
-            fontSize: ScreenRatio_iPhone(18),
-            marginEnd: ScreenRatio_iPhone(10),
-            color: (sizeType == product.sizeType) ? "#000000" : "#c2c2c2",
-            fontWeight: (sizeType == product.sizeType) ? "600" : "400"
-        }
-    })
-}
 
 export default Product
