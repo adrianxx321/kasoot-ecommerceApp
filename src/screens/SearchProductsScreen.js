@@ -9,7 +9,7 @@ import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
 const SearchProductsScreen = ({navigation}) => {
-    const [search, setSearch] = useState('')
+    const [search, setSearch] = useState("women")
     const [products, fetchProducts] = useState([])
     const queryProducts = async() => {
         try {
@@ -26,7 +26,6 @@ const SearchProductsScreen = ({navigation}) => {
     useEffect(() => {
         // Fetch products (not from Firebase)
         queryProducts()
-
     }, [])
     
     // Back and filter buttons ...

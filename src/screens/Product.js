@@ -24,16 +24,27 @@ const Product = ({route, navigation}) => {
     const [loading, setLoading] = useState(true)
     const [product, setProduct] = useState(null)
     const [selectedShoe, setSelectedShoe] = useState(null)
-    const [wishlist, setWishlist] = useState(dummyWishList)
+    const [wishlist, setWishlist] = useState([])
+
     const fetchProduct = async (shoeID) => {
         try {
             const response = await FirebaseServices.getShoe(shoeID).get()
 
             if(response.exists) {
-                return response.data()
+                setProduct(response.data())
+                setLoading(false)
             }
-            else {
-                return null
+        } catch(err) {
+            console.error(err)
+        }
+    }
+
+    const fetchWishlist = async (uid) => {
+        try {
+            const response = await FirebaseServices.getWishlist(uid).get()
+
+            if(response.exists) {
+                setWishlist(response.data().products)
             }
         } catch(err) {
             console.error(err)
@@ -41,13 +52,8 @@ const Product = ({route, navigation}) => {
     }
 
     useEffect(() => {
-        fetchProduct(shoeID).then(result => {
-            let data = result
-            console.log(data)
-            setProduct(data)
-            setLoading(false)
-        })
-
+        fetchProduct(shoeID)
+        fetchWishlist("caXHZssX32hRElZez1uFRd7LTIN2")
     }, [])
 
     // Back and "more options" buttons ...
@@ -239,7 +245,7 @@ const Product = ({route, navigation}) => {
                 style={{
                     position: "absolute",
                     bottom: 0,
-                    paddingVertical: ScreenRatio_iPhone(28),
+                    paddingBottom: ScreenRatio_iPhone(28),
                     zIndex: 3,
                     width: "100%",
                 }}>
@@ -251,12 +257,14 @@ const Product = ({route, navigation}) => {
                     <TouchableOpacity
                         onPress={() => {
                             if (wishlist.includes(product.id)) {
-                                setWishlist(wishlist.filter((e)=>(e !== product.id))) // remove
-                                // dummyWishList = dummyWishList.filter((e)=>(e !== product.id))
+                                // remove
+                                setWishlist(wishlist.filter((e)=>(e !== product.id)))
+                                FirebaseServices.removeFromWishlist("caXHZssX32hRElZez1uFRd7LTIN2", product.id)
                             }
                             else {
-                                setWishlist([...wishlist, product.id]) // add
-                                // dummyWishList.push(product.id)
+                                // add
+                                setWishlist([...wishlist, product.id])
+                                FirebaseServices.addToWishlist("caXHZssX32hRElZez1uFRd7LTIN2", product.id)
                             }
                         }}>
                         <View style={{

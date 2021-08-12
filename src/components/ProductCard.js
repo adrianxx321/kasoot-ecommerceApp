@@ -1,12 +1,12 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, TouchableWithoutFeedback } from "react-native"
 import { useNavigation } from "@react-navigation/native";
+
+import * as FirebaseServices from "../services/firestore"
 
 import 'intl';
 import 'intl/locale-data/jsonp/en';
 import { ScreenRatio_iPhone } from "./ScreenRatio-iPhone"
-
-import { dummyWishList } from "../../assets/DUMMY/dummy";
 
 const formatter = Intl.NumberFormat('en-UK', {
     style: "currency",
@@ -15,7 +15,30 @@ const formatter = Intl.NumberFormat('en-UK', {
 
 const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDiscount}) => {
     const navigation = useNavigation()
-    const [wishlist, setWishlist] = useState(dummyWishList)
+    const [wishlist, setWishlist] = useState([])
+    
+    const fetchWishlist = async (uid) => {
+        try {
+            const response = await FirebaseServices.getWishlist(uid).get()
+
+            if(response.exists) {
+                setWishlist(response.data().products)
+            }
+        } catch(err) {
+            console.error(err)
+        }
+    }
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener("focus", () => {
+            fetchWishlist("caXHZssX32hRElZez1uFRd7LTIN2")
+        })
+
+        // Fetch wishlist (not from Firebase)
+        fetchWishlist("caXHZssX32hRElZez1uFRd7LTIN2")
+
+        return unsubscribe
+    }, [navigation])
     
     return (
         <TouchableWithoutFeedback
@@ -60,12 +83,14 @@ const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDisco
                     <TouchableOpacity
                         onPress={() => {
                             if (wishlist.includes(prodID)) {
-                                setWishlist(wishlist.filter((e)=>(e !== prodID))) // remove
-                                //dummyWishList = dummyWishList.filter((e)=>(e !== prodID))
+                                // remove
+                                setWishlist(wishlist.filter((e)=>(e !== prodID)))
+                                FirebaseServices.removeFromWishlist("caXHZssX32hRElZez1uFRd7LTIN2", prodID)
                             }
                             else {
-                                setWishlist([...wishlist, prodID]) // add
-                                //dummyWishList.push(prodID)
+                                // add
+                                setWishlist([...wishlist, prodID])
+                                FirebaseServices.addToWishlist("caXHZssX32hRElZez1uFRd7LTIN2", prodID)
                             }
                         }}>
                         <Image 
