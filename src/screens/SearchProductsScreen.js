@@ -8,12 +8,13 @@ import 'intl'
 import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
-const SearchProductsScreen = ({navigation}) => {
-    const [search, setSearch] = useState("nike")
+const SearchProductsScreen = ({route, navigation}) => {
+    const {passedSearchTerm} = route.params
     const [products, fetchProducts] = useState([])
+
     const queryProducts = async() => {
         try {
-            const response = await algolia.getShoesQuery(search)
+            const response = await algolia.getShoesQuery(passedSearchTerm)
 
             if(response.length > 0) {
                 fetchProducts(response)
@@ -24,9 +25,15 @@ const SearchProductsScreen = ({navigation}) => {
     }
 
     useEffect(() => {
+        const unsubscribe = navigation.addListener("focus", () => {
+            queryProducts()
+        })
+
         // Fetch products (not from Firebase)
         queryProducts()
-    }, [])
+
+        return unsubscribe
+    }, [navigation])
     
     // Back and filter buttons ...
     const renderHeader = () => {
@@ -52,7 +59,9 @@ const SearchProductsScreen = ({navigation}) => {
                 </TouchableOpacity>
                 <View style={{flexDirection: "row"}}>
                     <TouchableOpacity
-                        onPress={() => {}}>
+                        onPress={() => {
+                            navigation.navigate("Search Screen")
+                        }}>
                         <Image
                             source={require("../../assets/icons/search.png")}
                             resizeMode="contain"
@@ -95,7 +104,7 @@ const SearchProductsScreen = ({navigation}) => {
                 marginHorizontal: ScreenRatio_iPhone(25),
                 zIndex: 1,
             }}>
-                <Text style={styles.titleText}>Search Results for "{search}"</Text>
+                <Text style={styles.titleText}>Search Results for "{passedSearchTerm}"</Text>
             </View>
         )
     }

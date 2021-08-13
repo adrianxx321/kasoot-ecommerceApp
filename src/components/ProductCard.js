@@ -36,7 +36,7 @@ const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDisco
             fetchWishlist("caXHZssX32hRElZez1uFRd7LTIN2")
         })
 
-        // Fetch wishlist (not from Firebase)
+        // Fetch wishlist from Firebase
         fetchWishlist("caXHZssX32hRElZez1uFRd7LTIN2")
 
         return unsubscribe
