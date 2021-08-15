@@ -1,11 +1,11 @@
 import React from "react"
 import { View, Text, Button, StyleSheet } from "react-native"
 
-const HomeScreen = ({navigation}) => {
+const Payment = ({navigation}) => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>
-            Home Screen
+            Payment Screen
             </Text>
         </View>
     )
@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 20,
   },
-});    
-    
+}); 
 
-export default HomeScreen
+export default Payment
