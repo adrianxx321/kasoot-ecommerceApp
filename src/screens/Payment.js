@@ -384,11 +384,8 @@ const Payment = ({navigation}) => {
     }
 
     return (
-        <View>            
-            
-            <ScrollView style={{
-                Color: "#ffffff",
-            }}>
+        <View>             
+            <ScrollView>
             {renderHeader()}
             {renderTitle()}           
             {renderDescription()}
