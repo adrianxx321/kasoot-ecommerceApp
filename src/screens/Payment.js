@@ -1,10 +1,11 @@
 import React, { useState, useEffect, Component } from "react"
-import { View, Text, Button, Image, TouchableOpacity, StyleSheet, Alert, FlatList, ScrollView } from "react-native"
+import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Alert, FlatList, ScrollView } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 import 'intl'
 import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_General } from "../components/ScreenRatio-General"
+
 import Toast from "react-native-toast-message"
 
 // Currency formatter
@@ -37,6 +38,11 @@ const FlatListItem = ({ item, onPress, backgroundColor, textColor, borderColor }
 const Payment = ({navigation}) => {
 
     const amount = 599.99;
+    const [cardName, setcardName] = useState('')
+    const [cardNumber, setcardNumber] = useState('')
+    const [cardMonth, setcardMonth] = useState('')
+    const [cardYear, setcardYear] = useState('')
+    const [cardCVV, setcardCVV] = useState('')
 
     const renderHeader = () => {
         return (
@@ -168,7 +174,7 @@ const Payment = ({navigation}) => {
                     fontWeight: "bold",
                 }}>
                     PAYMENT METHODS:
-                </Text>
+            </Text>
 
             <FlatList
                 style={{
@@ -184,6 +190,160 @@ const Payment = ({navigation}) => {
         );
     };
 
+    const renderBankCardInputForm = () => {  
+        return (
+            <SafeAreaView style={{
+                marginHorizontal: ScreenRatio_General(50),
+                flex: 1,
+                height: ScreenRatio_General(400),
+                backgroundColor: "#ffffff",
+                borderRadius: 7, 
+                borderWidth: 3,
+                borderColor: "#c2c2c2",    
+            }}>
+            <Text
+                style={{
+                    fontSize: ScreenRatio_General(22),
+                    textAlign: 'left',
+                    marginTop: ScreenRatio_General(10),
+                    marginHorizontal: ScreenRatio_General(30),
+                    color: "#000000",
+                    fontWeight: "bold",
+                }}>
+                    Card Name:
+            </Text>
+            <TextInput
+                    placeholder="Card Name"
+                    keyboardType="default"
+                    onChangeText={(input) => setcardName(input)}
+                    style={{
+                            flexShrink: 1, 
+                            fontSize: ScreenRatio_General(18),
+                            marginHorizontal: ScreenRatio_General(30),
+                            backgroundColor: "#ffffff",
+                            height: ScreenRatio_General(50),
+                            margin: ScreenRatio_General(15),
+                            borderColor: "#4f4f4f",
+                            borderWidth: 1,                           
+                            borderRadius: 5,
+                            padding: 10,
+                            width: ScreenRatio_General(365), 
+                    }}
+                />
+                <Text
+                style={{
+                    fontSize: ScreenRatio_General(22),
+                    textAlign: 'left',
+                    marginTop: ScreenRatio_General(10),
+                    marginHorizontal: ScreenRatio_General(30),
+                    color: "#000000",
+                    fontWeight: "bold",
+                }}>
+                    Card Details:
+            </Text>
+            <TextInput
+                    placeholder="Card Number"
+                    keyboardType="numeric"
+                    maxLength = {16}
+                    onChangeText={(input) => setcardNumber(input)}
+                    style={{
+                            flexShrink: 1, 
+                            fontSize: ScreenRatio_General(18),
+                            marginHorizontal: ScreenRatio_General(30),
+                            backgroundColor: "#ffffff",
+                            height: ScreenRatio_General(50),
+                            margin: ScreenRatio_General(15),
+                            borderColor: "#4f4f4f",
+                            borderWidth: 1,
+                            borderRadius: 5,
+                            padding: ScreenRatio_General(10),   
+                            width: ScreenRatio_General(365),                        
+                    }}
+                />
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    marginBottom:ScreenRatio_General(10),
+                    width: ScreenRatio_General(450),
+                }}>
+            <TextInput
+                    placeholder="MM"
+                    keyboardType="number-pad"
+                    maxLength = {2}
+                    onChangeText={(input) => setcardMonth(input)}
+                    style={{
+                            flexShrink: 1, 
+                            fontSize: ScreenRatio_General(18),
+                            marginLeft: ScreenRatio_General(30),
+                            marginRight: ScreenRatio_General(10),
+                            textAlign: "center", 
+                            backgroundColor: "#ffffff",
+                            height: ScreenRatio_General(50),
+                            margin: ScreenRatio_General(15),
+                            borderColor: "#4f4f4f",
+                            borderWidth: 1,
+                            borderRadius: 5,
+                            padding: 10,
+                            width: ScreenRatio_General(70),
+                    }}
+                />
+                <Text
+                style={{
+                    fontSize: ScreenRatio_General(22),
+                    textAlign: 'left',
+                    marginTop: ScreenRatio_General(25),
+                    color: "#000000",
+                    fontWeight: "bold",
+                }}>
+                    /
+                </Text>
+                <TextInput
+                            placeholder="YY"
+                            keyboardType="number-pad"
+                            maxLength = {2}
+                            onChangeText={(input) => setcardYear(input)}
+                            style={{
+                                    flexShrink: 1, 
+                                    fontSize: ScreenRatio_General(18),
+                                    marginLeft: ScreenRatio_General(10),
+                                    marginRight: ScreenRatio_General(60),
+                                    textAlign: "center", 
+                                    backgroundColor: "#ffffff",
+                                    height: ScreenRatio_General(50),
+                                    margin: ScreenRatio_General(15),
+                                    borderColor: "#4f4f4f",
+                                    borderWidth: 1,
+                                    borderRadius: 5,
+                                    padding: 10,
+                                    width: ScreenRatio_General(70), 
+                            }}
+                        />
+                    <TextInput
+                        placeholder="CVV"
+                        keyboardType="numeric"
+                        
+                        maxLength = {3}
+                        onChangeText={(input) => setcardCVV(input)}
+                        style={{
+                                flexShrink: 1, 
+                                fontSize: ScreenRatio_General(18),
+                                marginHorizontal: ScreenRatio_General(30),
+                                textAlign: "center", 
+                                backgroundColor: "#ffffff",
+                                height: ScreenRatio_General(50),
+                                margin: ScreenRatio_General(15),
+                                borderColor: "#4f4f4f",
+                                borderWidth: 1,
+                                borderRadius: 5,
+                                padding: 10,
+                                width: ScreenRatio_General(100), 
+                        }}
+                    />
+                </View>                
+            </SafeAreaView>
+        )
+    }
+
     const renderPaymentButton = () => {
         return (
             <SafeAreaView>
@@ -195,12 +355,12 @@ const Payment = ({navigation}) => {
                                 text1: "Payment Successful!",
                                 text2: "Order Placed!", 
                                 visibilityTime: 1000,
-                                bottomOffset: ScreenRatio_General(100),
+                                bottomOffset: ScreenRatio_General(110),
                             })
                         }}>
                         <Text style={{
                             backgroundColor: "#de651d",
-                            marginTop: ScreenRatio_General(50),
+                            marginVertical: ScreenRatio_General(20),
                             marginHorizontal: ScreenRatio_General(120),
                             color: "#ffffff",
                             paddingVertical: ScreenRatio_General(20),
@@ -224,31 +384,25 @@ const Payment = ({navigation}) => {
     }
 
     return (
-        <View>
-            {renderHeader()}
-            {/* <View style={styles.space} /> */}
+        <View>            
+            
             <ScrollView style={{
-                height: "84%",
                 Color: "#ffffff",
             }}>
+            {renderHeader()}
             {renderTitle()}           
             {renderDescription()}
             {RenderPaymentBox()}
             {RenderPaymentFlatList()}
-            </ScrollView>
+            {renderBankCardInputForm()}
             {renderPaymentButton()}
             {paymentSuccessfulToast()}
+            </ScrollView>          
         </View>
     )  
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
     item: {
         padding: 15,
         marginVertical: 5,
