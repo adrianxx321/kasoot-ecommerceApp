@@ -37,12 +37,16 @@ const FlatListItem = ({ item, onPress, backgroundColor, textColor, borderColor }
 
 const Payment = ({navigation}) => {
 
-    const amount = 599.99;
+    const amount = 799.99;
     const [cardName, setcardName] = useState('')
     const [cardNumber, setcardNumber] = useState('')
     const [cardMonth, setcardMonth] = useState('')
     const [cardYear, setcardYear] = useState('')
     const [cardCVV, setcardCVV] = useState('')
+
+    const [TnGPhoneNo, setTnGPhoneNo] = useState('')
+    const [BoostPhoneNo, setBoostPhoneNo] = useState('')
+
 
     const renderHeader = () => {
         return (
@@ -103,7 +107,7 @@ const Payment = ({navigation}) => {
         )
     }
 
-    const RenderPaymentBox = () => {
+    const renderPaymentBox = () => {
         return (
             <SafeAreaView
                 style={{
@@ -122,8 +126,9 @@ const Payment = ({navigation}) => {
                             marginHorizontal: ScreenRatio_General(30),
                             marginBottom: ScreenRatio_General(30),
                             color: "#ffffff",
+                            fontWeight: "bold",
                         }}>
-                            You have to pay:
+                            Total amount to pay:
                     </Text>
 
                     <Text
@@ -143,7 +148,7 @@ const Payment = ({navigation}) => {
         )
     }
 
-    const RenderPaymentFlatList = () => {
+    const renderPaymentFlatList = () => {
         const [selectedId, setSelectedId] = useState(null);
 
         const renderItem = ({ item }) => {
@@ -344,6 +349,94 @@ const Payment = ({navigation}) => {
         )
     }
 
+    const renderTouchnGoInputForm = () => {  
+        return (
+            <SafeAreaView style={{
+                marginHorizontal: ScreenRatio_General(50),
+                flex: 1,
+                height: ScreenRatio_General(200),
+                backgroundColor: "#ffffff",
+                borderRadius: 7, 
+                borderWidth: 3,
+                borderColor: "#c2c2c2",    
+            }}>
+            <Text
+                style={{
+                    fontSize: ScreenRatio_General(22),
+                    textAlign: 'left',
+                    marginTop: ScreenRatio_General(10),
+                    marginHorizontal: ScreenRatio_General(30),
+                    color: "#000000",
+                    fontWeight: "bold",
+                }}>
+                    Phone Number (Touch n Go):
+            </Text>
+            <TextInput
+                    placeholder="e.g. 01X-XXX XXXX"
+                    keyboardType="numeric"
+                    onChangeText={(input) => setTnGPhoneNo(input)}
+                    style={{
+                            flexShrink: 1, 
+                            fontSize: ScreenRatio_General(18),
+                            marginHorizontal: ScreenRatio_General(30),
+                            backgroundColor: "#ffffff",
+                            height: ScreenRatio_General(50),
+                            margin: ScreenRatio_General(15),
+                            borderColor: "#4f4f4f",
+                            borderWidth: 1,                           
+                            borderRadius: 5,
+                            padding: 10,
+                            width: ScreenRatio_General(365), 
+                    }}
+                />             
+            </SafeAreaView>
+        )
+    }
+
+    const renderBoostInputForm = () => {  
+        return (
+            <SafeAreaView style={{
+                marginHorizontal: ScreenRatio_General(50),
+                flex: 1,
+                height: ScreenRatio_General(200),
+                backgroundColor: "#ffffff",
+                borderRadius: 7, 
+                borderWidth: 3,
+                borderColor: "#c2c2c2",    
+            }}>
+            <Text
+                style={{
+                    fontSize: ScreenRatio_General(22),
+                    textAlign: 'left',
+                    marginTop: ScreenRatio_General(10),
+                    marginHorizontal: ScreenRatio_General(30),
+                    color: "#000000",
+                    fontWeight: "bold",
+                }}>
+                    Phone Number (Boost):
+            </Text>
+            <TextInput
+                    placeholder="e.g. 01X-XXX XXXX"
+                    keyboardType="numeric"
+                    onChangeText={(input) => setBoostPhoneNo(input)}
+                    style={{
+                            flexShrink: 1, 
+                            fontSize: ScreenRatio_General(18),
+                            marginHorizontal: ScreenRatio_General(30),
+                            backgroundColor: "#ffffff",
+                            height: ScreenRatio_General(50),
+                            margin: ScreenRatio_General(15),
+                            borderColor: "#4f4f4f",
+                            borderWidth: 1,                           
+                            borderRadius: 5,
+                            padding: 10,
+                            width: ScreenRatio_General(365), 
+                    }}
+                />             
+            </SafeAreaView>
+        )
+    }
+
     const renderPaymentButton = () => {
         return (
             <SafeAreaView>
@@ -389,9 +482,14 @@ const Payment = ({navigation}) => {
             {renderHeader()}
             {renderTitle()}           
             {renderDescription()}
-            {RenderPaymentBox()}
-            {RenderPaymentFlatList()}
+            {renderPaymentBox()}
+
+            {renderPaymentFlatList()}
+            
             {renderBankCardInputForm()}
+            {/* {renderTouchnGoInputForm()} */}
+            {/* {renderBoostInputForm()} */}
+
             {renderPaymentButton()}
             {paymentSuccessfulToast()}
             </ScrollView>          
