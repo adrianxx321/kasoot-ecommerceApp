@@ -305,8 +305,7 @@ const Product = ({route, navigation}) => {
                             if (index != -1) {
                                 // Modify current cart array and send back to database
                                 newCart[index].quantity += 1
-                                console.log(newCart)
-
+                                
                                 setCart(newCart)
                                 FirebaseServices.addToCartDup("caXHZssX32hRElZez1uFRd7LTIN2", newCart)
                             }
@@ -315,7 +314,13 @@ const Product = ({route, navigation}) => {
                                 newCart.push({
                                     prodID: shoeID,
                                     quantity: 1,
-                                    size: selectedSize
+                                    size: selectedSize,
+                                    prodImg: product.prodImg,
+                                    prodBrand: product.prodBrand,
+                                    prodName: product.prodName,
+                                    prodPrice: product.prodPrice,
+                                    prodDiscount: product.prodDiscount,
+                                    sizeType: product.sizeType
                                 })
                                 
                                 setCart(newCart)
@@ -332,7 +337,6 @@ const Product = ({route, navigation}) => {
                         }}>
                         <Text style={{
                             backgroundColor: "#000000",
-                            color: "#ffffff",
                             fontWeight: "500",
                             backgroundColor: (selectedSize != null) ? "#000000" : "#d6d6d6",
                             color: (selectedSize != null) ? "#ffffff" : "#93959e",
