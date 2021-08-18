@@ -38,14 +38,16 @@ const FlatListItem = ({ item, onPress, backgroundColor, textColor, borderColor }
 const Payment = ({navigation}) => {
 
     const amount = 799.99;
-    const [cardName, setcardName] = useState('')
-    const [cardNumber, setcardNumber] = useState('')
-    const [cardMonth, setcardMonth] = useState('')
-    const [cardYear, setcardYear] = useState('')
-    const [cardCVV, setcardCVV] = useState('')
+    const [selectedId, setSelectedId] = useState('');
 
-    const [TnGPhoneNo, setTnGPhoneNo] = useState('')
-    const [BoostPhoneNo, setBoostPhoneNo] = useState('')
+    const [cardName, setcardName] = useState('');
+    const [cardNumber, setcardNumber] = useState('');
+    const [cardMonth, setcardMonth] = useState('');
+    const [cardYear, setcardYear] = useState('');
+    const [cardCVV, setcardCVV] = useState('');
+
+    const [TnGPhoneNo, setTnGPhoneNo] = useState('');
+    const [BoostPhoneNo, setBoostPhoneNo] = useState('');
 
 
     const renderHeader = () => {
@@ -149,7 +151,7 @@ const Payment = ({navigation}) => {
     }
 
     const renderPaymentFlatList = () => {
-        const [selectedId, setSelectedId] = useState(null);
+        
 
         const renderItem = ({ item }) => {
             const backgroundColor = item.id === selectedId ? "#de651d" : "#c2c2c2";
@@ -437,6 +439,33 @@ const Payment = ({navigation}) => {
         )
     }
 
+    const renderPaymentSelection = () => {
+        if (selectedId == "1") {
+            return (
+                <View>
+                {renderBankCardInputForm()}
+                </View>
+            )
+        }
+        else if (selectedId == "2") {
+            return (
+                <View>
+                {renderTouchnGoInputForm()}
+                </View>
+            )
+        }
+        else if (selectedId == "3") {
+            return (
+                <View>
+                {renderBoostInputForm()}
+                </View>
+            )
+        }
+        else {
+            return <View></View>
+        }        
+    };
+
     const renderPaymentButton = () => {
         return (
             <SafeAreaView>
@@ -485,10 +514,8 @@ const Payment = ({navigation}) => {
             {renderPaymentBox()}
 
             {renderPaymentFlatList()}
-            
-            {renderBankCardInputForm()}
-            {/* {renderTouchnGoInputForm()} */}
-            {/* {renderBoostInputForm()} */}
+
+            {renderPaymentSelection()}
 
             {renderPaymentButton()}
             {paymentSuccessfulToast()}
@@ -499,9 +526,9 @@ const Payment = ({navigation}) => {
 
 const styles = StyleSheet.create({
     item: {
-        padding: 15,
-        marginVertical: 5,
-        marginHorizontal: 5,
+        padding: ScreenRatio_General(17),
+        marginVertical: ScreenRatio_General(10),
+        marginHorizontal: ScreenRatio_General(10),
         borderRadius: 10,
         borderWidth: 3,
     },
