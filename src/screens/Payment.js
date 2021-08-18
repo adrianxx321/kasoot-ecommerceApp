@@ -37,7 +37,8 @@ const FlatListItem = ({ item, onPress, backgroundColor, textColor, borderColor }
 
 const Payment = ({navigation}) => {
 
-    const amount = 799.99;
+    const amount = 2799.99;
+
     const [selectedId, setSelectedId] = useState('');
 
     const [cardName, setcardName] = useState('');
@@ -47,8 +48,8 @@ const Payment = ({navigation}) => {
     const [cardCVV, setcardCVV] = useState('');
 
     const [TnGPhoneNo, setTnGPhoneNo] = useState('');
-    const [BoostPhoneNo, setBoostPhoneNo] = useState('');
 
+    const [BoostPhoneNo, setBoostPhoneNo] = useState('');
 
     const renderHeader = () => {
         return (
