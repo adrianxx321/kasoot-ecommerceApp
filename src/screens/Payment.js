@@ -463,7 +463,15 @@ const Payment = ({navigation}) => {
             )
         }
         else {
-            return <View></View>
+            return (
+                <View
+                    style={{
+                        marginHorizontal: ScreenRatio_General(50),
+                        flex: 1,
+                        height: ScreenRatio_General(200),
+                }}>
+                </View>
+            )
         }        
     };
 
