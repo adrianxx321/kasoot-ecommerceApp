@@ -469,32 +469,31 @@ const Payment = ({navigation}) => {
     const renderPaymentButton = () => {
         return (
             <SafeAreaView>
-            <TouchableOpacity
-                        onPress={() => {
-                            Toast.show({
-                                type: "success",
-                                position: "bottom",
-                                text1: "Payment Successful!",
-                                text2: "Order Placed!", 
-                                visibilityTime: 1000,
-                                bottomOffset: ScreenRatio_General(110),
-                            })
-                        }}>
-                        <Text style={{
-                            backgroundColor: "#de651d",
-                            marginVertical: ScreenRatio_General(20),
-                            marginHorizontal: ScreenRatio_General(120),
-                            color: "#ffffff",
-                            paddingVertical: ScreenRatio_General(20),
-                            borderRadius: ScreenRatio_General(35),
-                            borderWidth: 3,
-                            borderColor: "#d4570d",
-                            fontSize: ScreenRatio_General(22),
-                            overflow: "hidden",
-                            textAlign: "center",
-                        }}> Pay {formatter.format(amount)}
-                        </Text>
-                    </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        Toast.show({
+                            type: "success",
+                            position: "bottom",
+                            text1: "Payment Successful!",
+                            text2: "Order Placed!", 
+                            visibilityTime: 1000,
+                            bottomOffset: ScreenRatio_General(110),
+                        })
+                    }}>
+                    <Text style={{
+                        backgroundColor: "#000000",
+                        marginVertical: ScreenRatio_General(20),
+                        marginHorizontal: ScreenRatio_General(120),
+                        color: "#ffffff",
+                        paddingVertical: ScreenRatio_General(20),
+                        borderRadius: ScreenRatio_General(35),
+                        fontSize: ScreenRatio_General(22),
+                        fontWeight: "bold",
+                        overflow: "hidden",
+                        textAlign: "center",
+                    }}> Pay {formatter.format(amount)}
+                    </Text>
+                </TouchableOpacity>
             </SafeAreaView>
         )
     }
@@ -512,11 +511,8 @@ const Payment = ({navigation}) => {
             {renderTitle()}           
             {renderDescription()}
             {renderPaymentBox()}
-
             {renderPaymentFlatList()}
-
             {renderPaymentSelection()}
-
             {renderPaymentButton()}
             {paymentSuccessfulToast()}
             </ScrollView>          
