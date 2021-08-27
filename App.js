@@ -1,11 +1,24 @@
 import React from 'react';
-import { NavigationContainer } from "@react-navigation/native"
-import Tabs from "./src/components/Tabs"
+// createAppContainer has been changed to NavigationContainer
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+
+import SearchScreen from './src/screens/SearchScreen';
+import SearchProductsScreen from './src/screens/SearchProductsScreen';
+import BagScreen from './src/screens/BagScreen';
+import Product from './src/screens/Product'
+
+const Stack = createStackNavigator()
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Tabs />
+        <Stack.Navigator headerMode="none">
+          <Stack.Screen name="Search Screen" component={SearchScreen} />
+          <Stack.Screen name="Search Products" component={SearchProductsScreen} />
+          <Stack.Screen name="My Bag" component={BagScreen} />
+          <Stack.Screen name="Product" component={Product} />
+        </Stack.Navigator>
     </NavigationContainer>
-  );
+  )
 }
