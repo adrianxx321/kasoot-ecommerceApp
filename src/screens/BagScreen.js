@@ -63,7 +63,7 @@ const BagScreen = ({navigation}) => {
                         }}
                     />
                 </TouchableOpacity>
-                <TouchableWithoutFeedback onPress={() => {}}>
+                <TouchableWithoutFeedback onPress={() => navigation.navigate("My Wishlist")}>
                     <Text style={{
                         color: "#a3a3a3",
                         fontSize: ScreenRatio_iPhone(20),
@@ -121,7 +121,7 @@ const BagScreen = ({navigation}) => {
                 </View>
                 <TouchableOpacity
                     style={{}}
-                    onPress={() => {}}>
+                    onPress={() => navigation.navigate("Checkout")}>
                     <Text style={{
                         backgroundColor: "#000000",
                         color: "#ffffff",

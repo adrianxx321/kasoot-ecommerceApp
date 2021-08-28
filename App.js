@@ -7,6 +7,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import SearchProductsScreen from './src/screens/SearchProductsScreen';
 import BagScreen from './src/screens/BagScreen';
+import Wishlist from './src/screens/Wishlist';
 import Product from './src/screens/Product'
 import Payment from './src/screens/Payment';
 
@@ -20,6 +21,7 @@ export default function App() {
           <Stack.Screen name="Search Screen" component={SearchScreen} />
           <Stack.Screen name="Search Products" component={SearchProductsScreen} />
           <Stack.Screen name="My Bag" component={BagScreen} />
+          <Stack.Screen name="My Wishlist" component={Wishlist} />
           <Stack.Screen name="Product" component={Product} />
           <Stack.Screen name="Checkout" component={Payment} /> 
         </Stack.Navigator>

@@ -36,6 +36,10 @@ export const getShoe = (shoeID) => {
     return db.collection("shoes").doc(shoeID)
 }
 
+export const getShoesByID = (shoeIDArr) => {
+    return db.collection("shoes").where("id", "in", shoeIDArr).get()
+}
+
 export const getWishlist = (uid) => {
     return db.collection("wishlist").doc(uid)
 }
