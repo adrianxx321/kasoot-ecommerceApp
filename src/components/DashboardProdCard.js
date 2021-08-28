@@ -59,7 +59,8 @@ const DashboardProdCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, pro
                 <View
                     style={{
                         flexDirection: "row",
-                        justifyContent: "center"
+                        justifyContent: "center",
+                        marginTop: ScreenRatio_iPhone(15),
                     }}>
                     <Image 
                         source={{uri: prodImg}}
