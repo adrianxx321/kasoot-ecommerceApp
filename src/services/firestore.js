@@ -20,6 +20,18 @@ else {
 
 const db = firebase.firestore()
 
+export const getAllShoes = () => {
+    return db.collection("shoes").get()
+}
+
+export const getShoeByCat = (category) => {
+    return db.collection("shoes").where("prodCat", "==", category).get()
+}
+
+export const getOtherShoes = () => {
+    return db.collection("shoes").where("prodCat", "not-in", ["Sneakers", "Slippers"]).get()
+}
+
 export const getShoe = (shoeID) => {
     return db.collection("shoes").doc(shoeID)
 }

@@ -40,17 +40,17 @@ const SearchProductsScreen = ({route, navigation}) => {
         return (
             <SafeAreaView
                 style={{
-                        zIndex: 1,
-                        marginStart: ScreenRatio_iPhone(15),
-                        marginVertical: ScreenRatio_iPhone(25),
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        position: "absolute",
-                        left: 0,
-                        right: 0,
+                    zIndex: 1,
+                    marginStart: ScreenRatio_iPhone(15),
+                    marginVertical: ScreenRatio_iPhone(25),
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    position: "absolute",
+                    left: 0,
+                    right: 0,
                 }}>
                 <TouchableOpacity
-                    onPress={() => {}}>
+                    onPress={() => navigation.navigate("Home Page")}>
                     <Image
                         source={require("../../assets/icons/back.png")}
                         resizeMode="contain"
