@@ -79,3 +79,7 @@ export const addToCartDup = async (uid, newCart) => {
         console.error(err)
     }
 }
+
+export const getPrice = (uid) => {
+    return db.collection("prodPrice").doc(uid)
+}

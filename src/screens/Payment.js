@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Component } from "react"
 import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Alert, FlatList, ScrollView } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
+import * as FirebaseServices from "../services/firestore"
 
 import 'intl'
 import 'intl/locale-data/jsonp/en'
@@ -38,6 +39,7 @@ const FlatListItem = ({ item, onPress, backgroundColor, textColor, borderColor }
 const Payment = ({navigation}) => {
 
     const amount = 2799.99;
+    const [price, setPrice] = useState([])
 
     const [selectedId, setSelectedId] = useState('');
 
@@ -50,6 +52,24 @@ const Payment = ({navigation}) => {
     const [TnGPhoneNo, setTnGPhoneNo] = useState('');
 
     const [BoostPhoneNo, setBoostPhoneNo] = useState('');
+
+    const fetchPrice = async (uid) => {
+        try {
+            const response = await FirebaseServices.getPrice(uid).get()
+
+            if(response.exists) {
+                if(response.data().hasOwnProperty("prodPrice")) {
+                    setCart(response.data().prodPrice)
+                }
+            }
+        } catch(err) {
+            console.error(err)
+        }
+    }
+
+    useEffect(() => {
+        fetchPrice("caXHZssX32hRElZez1uFRd7LTIN2")
+    }, [])
 
     const renderHeader = () => {
         return (
@@ -479,21 +499,80 @@ const Payment = ({navigation}) => {
         return (
             <SafeAreaView>
                 <TouchableOpacity
+                    disabled={(selectedId == '') ? true : false}
                     onPress={() => {
-                        Toast.show({
-                            type: "success",
-                            position: "bottom",
-                            text1: "Payment Successful!",
-                            text2: "Order Placed!", 
-                            visibilityTime: 1000,
-                            bottomOffset: ScreenRatio_General(110),
-                        })
+                                if (selectedId == "1") {
+                                    if (cardName != '' && cardNumber != '' && cardMonth != '' && cardYear != '' && cardCVV != ''){  
+                                        Toast.show({
+                                            type: "success",
+                                            position: "bottom",
+                                            text1: "Payment Successful!",
+                                            text2: "Order Placed!", 
+                                            visibilityTime: 1000,
+                                            bottomOffset: ScreenRatio_General(110),
+                                        })
+                                    }
+                                    else {
+                                        Toast.show({
+                                            type: "error",
+                                            position: "bottom",
+                                            text1: "Payment Unsuccessful!",
+                                            text2: "Please complete all the nessary information!", 
+                                            visibilityTime: 1000,
+                                            bottomOffset: ScreenRatio_General(110),
+                                        })
+                                    }
+                                }
+                                else if (selectedId == "2") {
+                                    if (TnGPhoneNo != ''){     
+                                        Toast.show({
+                                            type: "success",
+                                            position: "bottom",
+                                            text1: "Payment Successful!",
+                                            text2: "Order Placed!", 
+                                            visibilityTime: 1000,
+                                            bottomOffset: ScreenRatio_General(110),
+                                        })
+                                    }
+                                    else {
+                                        Toast.show({
+                                            type: "error",
+                                            position: "bottom",
+                                            text1: "Payment Unsuccessful!",
+                                            text2: "Please complete all the nessary information!", 
+                                            visibilityTime: 1000,
+                                            bottomOffset: ScreenRatio_General(110),
+                                        })
+                                    }
+                                }
+                                else if (selectedId == "3") {
+                                    if (BoostPhoneNo != ''){        
+                                        Toast.show({
+                                            type: "success",
+                                            position: "bottom",
+                                            text1: "Payment Successful!",
+                                            text2: "Order Placed!", 
+                                            visibilityTime: 1000,
+                                            bottomOffset: ScreenRatio_General(110),
+                                        })
+                                    }
+                                    else {
+                                        Toast.show({
+                                            type: "error",
+                                            position: "bottom",
+                                            text1: "Payment Unsuccessful!",
+                                            text2: "Please complete all the nessary information!", 
+                                            visibilityTime: 1000,
+                                            bottomOffset: ScreenRatio_General(110),
+                                        })
+                                    }
+                                }
                     }}>
                     <Text style={{
-                        backgroundColor: "#000000",
+                        backgroundColor: (selectedId == '') ? "#d6d6d6" : "#000000",
                         marginVertical: ScreenRatio_General(20),
                         marginHorizontal: ScreenRatio_General(120),
-                        color: "#ffffff",
+                        color: (selectedId == '') ? "#93959e" : "#ffffff",
                         paddingVertical: ScreenRatio_General(20),
                         borderRadius: ScreenRatio_General(35),
                         fontSize: ScreenRatio_General(22),
@@ -507,12 +586,12 @@ const Payment = ({navigation}) => {
         )
     }
 
-    const paymentSuccessfulToast = () => {
+    const paymentToast = () => {
         return (
             <Toast ref={(ref => Toast.setRef(ref))}/>
         )
     }
-
+    
     return (
         <View>             
             <ScrollView>
@@ -523,7 +602,7 @@ const Payment = ({navigation}) => {
             {renderPaymentFlatList()}
             {renderPaymentSelection()}
             {renderPaymentButton()}
-            {paymentSuccessfulToast()}
+            {paymentToast()}
             </ScrollView>          
         </View>
     )  
