@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, TextInput, TouchableWithoutFeedback, AsyncStorage, ScrollView } from 
-"react-native"
+import { View, Text, Image, TouchableOpacity, FlatList, TextInput, TouchableWithoutFeedback, AsyncStorage } from  "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 import 'intl'
@@ -20,6 +19,7 @@ const SearchScreen = ({navigation}) => {
    const updateSearchHistory = async (searchHistoryList) => {
         try {
             await AsyncStorage.setItem('searchHistoryList', JSON.stringify(searchHistoryList));
+            console.log("History updated")
         } catch (error) {
             console.log('## ERROR SAVING ITEM ##: ', error);
         }
@@ -122,12 +122,14 @@ const SearchScreen = ({navigation}) => {
                 </View>
                 <TouchableOpacity
                     onPress={() => {
-                        setSearchHistoryList(searchHistoryList => [{
-                            id: searchHistoryList.length.toString(),
-                            phrase: search
-                        }, ...searchHistoryList]);
-                        updateSearchHistory(searchHistoryList);
-                        navigation.navigate("Search Products", {passedSearchTerm: search})
+                        if(search.length > 0) {
+                            setSearchHistoryList(searchHistoryList => [{
+                                id: searchHistoryList.length.toString(),
+                                phrase: search
+                            }, ...searchHistoryList]);
+                            updateSearchHistory(searchHistoryList);
+                            navigation.navigate("Search Products", {passedSearchTerm: search})
+                        }
                     }}>
                     <Text style={{
                         color: "#f58b4b",
@@ -148,11 +150,11 @@ const SearchScreen = ({navigation}) => {
                 marginBottom: ScreenRatio_iPhone(7),
                 padding: ScreenRatio_iPhone(3),
                 paddingEnd: ScreenRatio_iPhone(10),
-                right: ScreenRatio_iPhone(10),
+                marginHorizontal: ScreenRatio_iPhone(10)
                 }}
                 onPress={() => {
                     clearSearchHistory();
-                    }}>
+                }}>
                 <Image
                     source={require("../../assets/icons/close.png")}
                     resizeMode="contain"
@@ -163,7 +165,7 @@ const SearchScreen = ({navigation}) => {
                         height: ScreenRatio_iPhone(24),
                     }}
                 />
-                <Text style={{color: "#000000"}}>Clear all history</Text>
+                <Text style={{color: "#000000", alignSelf: "center"}}>Clear all history</Text>
             </TouchableOpacity>
             <FlatList 
                 data={searchHistoryList}
@@ -172,7 +174,6 @@ const SearchScreen = ({navigation}) => {
                 contentContainerStyle={{paddingBottom: ScreenRatio_iPhone(150)}}
                 style={{height: "100%"}}
             />
-            
         </SafeAreaView>
     )
 }

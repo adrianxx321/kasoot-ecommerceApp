@@ -10,8 +10,7 @@ import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_General } from "../components/ScreenRatio-General"
 
 const ProfileScreen = ({navigation}) => {
-
-    const [currentUserEmail, setCurrentUserEmail] = useState(FirebaseServices.getUserEmail)
+    const currentUserEmail = FirebaseServices.getUserEmail()
 
     // Set the Header - Back Button
     const renderHeader = () => {
@@ -125,10 +124,8 @@ const ProfileScreen = ({navigation}) => {
                     Email
                 </Text>
                 <TextInput
-                    
                     value={currentUserEmail}
                     editable={false}
-
                     style={{
                             flexShrink: 1, 
                             fontSize: ScreenRatio_General(20),
@@ -140,7 +137,7 @@ const ProfileScreen = ({navigation}) => {
                             borderBottomWidth:1,                           
                             borderRadius: 5,
                             padding: 10,
-                            width: ScreenRatio_General(430),
+                            width: "80%",
                             color:"#777777",
                     }}
                 />
@@ -159,10 +156,8 @@ const ProfileScreen = ({navigation}) => {
                     Password
                 </Text>
                 <TextInput
-                    
                     value={'****************'}
                     editable={false}
-
                     style={{
                             flexShrink: 1, 
                             fontSize: ScreenRatio_General(20),
@@ -174,7 +169,7 @@ const ProfileScreen = ({navigation}) => {
                             borderBottomWidth:1,                           
                             borderRadius: 5,
                             padding: 10,
-                            width: ScreenRatio_General(430),
+                            width: "80%",
                             color:"#777777",
                     }}
                 />

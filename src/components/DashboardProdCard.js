@@ -71,7 +71,7 @@ const DashboardProdCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, pro
                             borderRadius: ScreenRatio_iPhone(40),
                         }}
                     />
-                    <View style={{justifyContent: "center", left: "25%", right: "25%"}}>
+                    <View style={{justifyContent: "center", left: ScreenRatio_iPhone(15)}}>
                         <TouchableOpacity
                             onPress={() => {
                                 if (wishlist.includes(prodID)) {

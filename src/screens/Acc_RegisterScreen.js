@@ -72,7 +72,7 @@ const RegisterScreen = ({navigation}) => {
                         color: "#de651d",
                         fontWeight: "bold",
                     }}>
-                        Register a Kasoot! Account
+                        Register a KASOOT! Account
                 </Text>
             </SafeAreaView>
         )
@@ -108,9 +108,7 @@ const RegisterScreen = ({navigation}) => {
                     keyboardType= 'email-address'
                     autoCapitalize="none"
                     autoCorrect={false}
-
                     onChangeText={(input) => setTypedEmail(input)}
-
                     style={{
                             flexShrink: 1, 
                             fontSize: ScreenRatio_General(20),
@@ -122,7 +120,7 @@ const RegisterScreen = ({navigation}) => {
                             borderBottomWidth:1,                           
                             borderRadius: 5,
                             padding: 10,
-                            width: ScreenRatio_General(430), 
+                            width: "80%", 
                     }}
                 /> 
 
@@ -159,7 +157,7 @@ const RegisterScreen = ({navigation}) => {
                             borderBottomWidth:1,                           
                             borderRadius: 5,
                             padding: 10,
-                            width: ScreenRatio_General(430), 
+                            width: "80%", 
                     }}
                 />
 
@@ -196,7 +194,7 @@ const RegisterScreen = ({navigation}) => {
                             borderBottomWidth:1,                           
                             borderRadius: 5,
                             padding: 10,
-                            width: ScreenRatio_General(430), 
+                            width: "80%", 
                     }}
                 />   
              

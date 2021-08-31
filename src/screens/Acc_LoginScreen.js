@@ -84,7 +84,7 @@ const LoginScreen = ({navigation}) => {
                         color: "#de651d",
                         fontWeight: "bold",
                     }}>
-                        Login to your Kasoot! Account
+                        Login to your KASOOT! Account
                 </Text>
             </SafeAreaView>
         )
@@ -134,7 +134,7 @@ const LoginScreen = ({navigation}) => {
                             borderBottomWidth:1,                           
                             borderRadius: 5,
                             padding: 10,
-                            width: ScreenRatio_General(430), 
+                            width: "80%", 
                     }}
                 />
 
@@ -157,9 +157,7 @@ const LoginScreen = ({navigation}) => {
                     secureTextEntry={true}
                     autoCapitalize="none"
                     autoCorrect={false}
-
                     onChangeText={(input) => setTypedPassword(input)}
-
                     style={{
                             flexShrink: 1, 
                             fontSize: ScreenRatio_General(20),
@@ -171,7 +169,7 @@ const LoginScreen = ({navigation}) => {
                             borderBottomWidth:1,                           
                             borderRadius: 5,
                             padding: 10,
-                            width: ScreenRatio_General(430), 
+                            width: "80%",
                     }}
                 />   
              
