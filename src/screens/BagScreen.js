@@ -51,7 +51,7 @@ const BagScreen = ({navigation}) => {
 
     const renderHeader = () => {
         return (
-            <SafeAreaView style={styles.pageHeader}>
+            <View style={styles.pageHeader}>
                 <TouchableOpacity
                     onPress={() => navigation.goBack()}>
                     <Image
@@ -70,13 +70,13 @@ const BagScreen = ({navigation}) => {
                         textDecorationLine: "underline",
                     }}>SEE MY WISHLIST</Text>
                 </TouchableWithoutFeedback>
-            </SafeAreaView>
+            </View>
         )
     }
 
     const renderTitle = () => {
         return (
-            <SafeAreaView style={styles.pageHeader}>
+            <View style={styles.pageHeader}>
                 <Text style={{
                     fontWeight: "bold",
                     fontSize: ScreenRatio_iPhone(36)
@@ -85,7 +85,7 @@ const BagScreen = ({navigation}) => {
                     color: "#a3a3a3",
                     fontSize: ScreenRatio_iPhone(24)
                 }}>{cartItems.length} items</Text>
-            </SafeAreaView>
+            </View>
         )
     }
 
@@ -139,7 +139,7 @@ const BagScreen = ({navigation}) => {
     }
 
     return (
-        <View style={{flex: 1}}>
+        <SafeAreaView style={{flex: 1}}>
             {renderHeader()}
             {renderTitle()}
             <FlatList
@@ -150,7 +150,7 @@ const BagScreen = ({navigation}) => {
                 style={{marginTop: ScreenRatio_iPhone(20), marginBottom: ScreenRatio_iPhone(196)}}
             />
             {renderFooter()}
-        </View>
+        </SafeAreaView>
     )
 }
 
