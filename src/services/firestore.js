@@ -1,6 +1,9 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
+import { RecyclerViewBackedScrollView } from "react-native";
+import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
+import ProfileScreen from "../screens/Acc_ProfileScreen";
 
 // Initialize database
 const firebaseConfig = {
@@ -93,5 +96,82 @@ export const addToCartDup = async (uid, newCart) => {
         })
     } catch(err) {
         console.error(err)
+    }
+}
+
+
+// Account - Login
+export async function signIn (email, password)  {
+    
+    try{
+        await firebase.auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(function (user) {
+                console.log(user)
+                //alert(user)
+                //alert("ABC")
+                
+            })
+        } catch(e) {
+            alert("Incorrect Email or Password!")
+            console.log("Login FAILED: " + e.message)
+        }
+}
+
+
+// Account - Register
+export async function signUp (email, password) {
+
+    try {
+        await firebase.auth()
+            .createUserWithEmailAndPassword(email, password)
+                .then(function (user) {
+                console.log(user)
+            });
+
+        
+    } catch (e) {
+        
+        if (e.code === 'auth/email-already-in-use') {
+            alert("The email address is already in use by another account.")
+            console.log("Register FAILED: " + e.message)
+        }
+
+        if (e.code === 'auth/invalid-email') {
+            alert("Please enter a valid email for register!")
+            console.log("Register FAILED: User entered an INVALID email format!")
+        }
+    }
+}
+
+
+// Account - Logout
+export async function signOut() {
+    try {
+        await firebase.auth().signOut();
+        alert('Successfully Logged out!')
+    } catch (e) {
+        alert('error')
+    }
+}
+
+// Account - Get Current User's EMAIL
+export function getUserEmail() {
+    try {
+        
+        //alert(firebase.auth().currentUser.email)
+        return (firebase.auth().currentUser.email)
+    } catch (e) {
+
+    }
+}
+
+// Account - Get Current User's UID
+export function getUserID() {
+    try {
+        //alert(firebase.auth().currentUser.uid)
+        return (firebase.auth().currentUser.uid)
+    } catch (e) {
+
     }
 }

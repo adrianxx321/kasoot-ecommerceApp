@@ -8,6 +8,7 @@ import * as FirebaseServices from "../services/firestore"
 import 'intl'
 import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
+import { ScreenRatio_General } from "../components/ScreenRatio-General"
 
 const CategoriesFlatList = ({ item, onPress, textColor, underline }) => (
     <TouchableOpacity
@@ -21,7 +22,11 @@ const CategoriesFlatList = ({ item, onPress, textColor, underline }) => (
     </TouchableOpacity>
 )
 
+
+
+
 const HomeScreen = ({navigation}) => {
+
     const shoeCategories = [
         {
             id: "0",
@@ -70,6 +75,8 @@ const HomeScreen = ({navigation}) => {
         }
     }
 
+
+
     useEffect(() => {
         const unsubscribe = navigation.addListener("focus", () => {
             getShoes(catID)
@@ -80,6 +87,7 @@ const HomeScreen = ({navigation}) => {
 
         return unsubscribe
     }, [catID])
+
 
     const renderHeader = () => {
         const renderItem = ({ item }) => {
@@ -110,7 +118,9 @@ const HomeScreen = ({navigation}) => {
                         right: 0,
                     }}>
                     <TouchableOpacity
-                        onPress={() => {}}
+                        onPress={() => {
+                                navigation.navigate("Profile Screen")
+                        }}
                         style={{
                             marginStart: ScreenRatio_iPhone(15)
                         }}>
