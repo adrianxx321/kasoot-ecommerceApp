@@ -3,19 +3,12 @@ import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Ale
 import { SafeAreaView } from "react-native-safe-area-context"
 import Toast from "react-native-toast-message"
 
-import * as firebase from "firebase"
 import * as FirebaseServices from "../services/firestore"
-
-
-
-import auth from 'firebase/auth'
 
 import 'intl'
 import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_General } from "../components/ScreenRatio-General"
 import { out } from "react-native/Libraries/Animated/src/Easing"
-
-
 
 const LoginScreen = ({navigation}) => {
 
@@ -58,31 +51,22 @@ const LoginScreen = ({navigation}) => {
         }
     }
 
-
-    // Set the Header - Back Button
-    const renderHeader = () => {
+    // Set the Kasoot! Logo
+    const renderKasootLogo = () => {
         return (
             <SafeAreaView
                 style={{
-                    zIndex: 3,
-                    marginHorizontal: ScreenRatio_General(15),
-                    marginVertical: ScreenRatio_General(15),
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    position: "absolute",
-                    left: 0,
-                    right: 0
+                    marginTop: ScreenRatio_General(50),
+                    marginHorizontal: ScreenRatio_General(30),
+                    alignItems: 'center',
                 }}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate("Home Page")}
-                    //onPress={() => navigation.goBack()}
-                    >
-                    <Image
-                        source={require("../../assets/icons/back.png")}
-                        resizeMode="contain"
-                        style={styles.headerButtons}
-                    />
-                </TouchableOpacity>
+                <Image
+                    source={require("../../assets/icons/kasoot_logo.png")}
+                    resizeMode='contain'
+                    style={{
+                        height: ScreenRatio_General(125), 
+                        width: ScreenRatio_General(350), 
+                    }}/>
             </SafeAreaView>
         )
     }
@@ -95,7 +79,7 @@ const LoginScreen = ({navigation}) => {
                     style={{
                         fontSize: ScreenRatio_General(50),
                         textAlign: 'center',
-                        marginTop: ScreenRatio_General(100),
+                        marginTop: ScreenRatio_General(10),
                         marginHorizontal: ScreenRatio_General(30),
                         color: "#de651d",
                         fontWeight: "bold",
@@ -131,7 +115,6 @@ const LoginScreen = ({navigation}) => {
                 }}>
                     Email
                 </Text>
-
                 <TextInput
                     placeholder="Your_Email@Email.com"
                     keyboardType= 'email-address'
@@ -153,9 +136,7 @@ const LoginScreen = ({navigation}) => {
                             padding: 10,
                             width: ScreenRatio_General(430), 
                     }}
-                />             
-
-
+                />
 
                 {/* Ask Password */}
                 <Text
@@ -170,7 +151,6 @@ const LoginScreen = ({navigation}) => {
                 }}>
                     Password
                 </Text>
-
                 <TextInput
                     placeholder="Your Password"
                     keyboardType= 'default'
@@ -217,7 +197,6 @@ const LoginScreen = ({navigation}) => {
                     onPress={() => {
                         LoginToApp(typedEmail,typedPassword)
                     }}
-                    //onPress={() => alert(typedPassword)}
                     >
                     <Text style={{
                         backgroundColor: "#de651d",
@@ -243,11 +222,9 @@ const LoginScreen = ({navigation}) => {
                     >
 
                     <Text style={{
-                        //backgroundColor: "#000000",
                         color: "#000000",
                         fontWeight: "500",
                         paddingVertical: ScreenRatio_General(20),
-                        //borderRadius: ScreenRatio_General(32),
                         fontSize: ScreenRatio_General(18),
                         overflow: "hidden",
                         textAlign: "center",
@@ -264,7 +241,7 @@ const LoginScreen = ({navigation}) => {
     return (
         <View>
             <ScrollView>
-                {/*renderHeader()*/}
+                {renderKasootLogo()}
                 {renderTitle()}
                 {renderLoginBox()}
             </ScrollView>

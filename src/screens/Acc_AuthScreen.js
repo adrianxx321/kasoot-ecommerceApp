@@ -6,8 +6,6 @@ import Toast from "react-native-toast-message"
 import * as firebase from "firebase"
 import * as FirebaseServices from "../services/firestore"
 
-
-
 import auth from 'firebase/auth'
 
 import 'intl'
@@ -15,11 +13,9 @@ import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_General } from "../components/ScreenRatio-General"
 import { out } from "react-native/Libraries/Animated/src/Easing"
 
-
-
+// Check the user is logged in or not
 const CheckLogin = ({navigation}) => {
 
-    // See user is logged in or not
     // Set an initializing state whilst Firebase connects
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
@@ -40,10 +36,8 @@ const CheckLogin = ({navigation}) => {
 
     // Change the logic accordingly to your screen
     if (!user) {
-        //alert("Currently is GUEST!")
         navigation.navigate("Login Screen")
     } else {
-        alert('Welcome To KASOOT! \nYou are logged in as "' + user.email + '" !')
         navigation.navigate("Home Page")
     }
 

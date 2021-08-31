@@ -130,6 +130,14 @@ const HomeScreen = ({navigation}) => {
                             style={styles.headerButtons}
                         />
                     </TouchableOpacity>
+
+                    {/* KASOOT LOGO - middle of header */}
+                    <Image
+                            source={require("../../assets/icons/kasoot_logo.png")}
+                            resizeMode="contain"
+                            style={{width: ScreenRatio_General(110), height: ScreenRatio_General(42)}}
+                    />
+
                     <View style={{flexDirection: "row"}}>
                         <TouchableOpacity
                             onPress={() => {

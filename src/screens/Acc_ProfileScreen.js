@@ -3,15 +3,11 @@ import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Ale
 import { SafeAreaView } from "react-native-safe-area-context"
 import Toast from "react-native-toast-message"
 
-import * as firebase from "firebase"
 import * as FirebaseServices from "../services/firestore"
-
-import auth from 'firebase/auth'
 
 import 'intl'
 import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_General } from "../components/ScreenRatio-General"
-
 
 const ProfileScreen = ({navigation}) => {
 
@@ -63,7 +59,7 @@ const ProfileScreen = ({navigation}) => {
         )
     }
 
-
+    // Display Profile Picture
     const renderProfilePicture = () => {
         return (
             <View
@@ -84,7 +80,7 @@ const ProfileScreen = ({navigation}) => {
                 style={{
                     borderColor: "#000000", 
                     borderRadius: 1000,
-                    borderWidth: 1,
+                    borderWidth: 3,
                     height: ScreenRatio_General(220), 
                     width: ScreenRatio_General(220), 
                     alignItems: "center",
@@ -95,10 +91,9 @@ const ProfileScreen = ({navigation}) => {
                         style={{
                             height: ScreenRatio_General(180), 
                             width: ScreenRatio_General(180), 
-                            bottom: -5
+                            bottom: -2
                         }}/>
                 </View>
-
             </View>
         )
     }
@@ -129,7 +124,6 @@ const ProfileScreen = ({navigation}) => {
                 }}>
                     Email
                 </Text>
-
                 <TextInput
                     
                     value={currentUserEmail}
@@ -149,9 +143,7 @@ const ProfileScreen = ({navigation}) => {
                             width: ScreenRatio_General(430),
                             color:"#777777",
                     }}
-                />             
-
-
+                />
 
                 {/* Show USER PASSWORD */}
                 <Text
@@ -166,10 +158,9 @@ const ProfileScreen = ({navigation}) => {
                 }}>
                     Password
                 </Text>
-
                 <TextInput
                     
-                    value={'*******************************************'}
+                    value={'****************'}
                     editable={false}
 
                     style={{
@@ -187,14 +178,6 @@ const ProfileScreen = ({navigation}) => {
                             color:"#777777",
                     }}
                 />
-
-
-
-
-
-
-
-
 
                 <View
                     style={{
@@ -219,7 +202,6 @@ const ProfileScreen = ({navigation}) => {
                             FirebaseServices.signOut()
                             navigation.navigate("Login Screen")
                         }}
-                        //onPress={() => alert(typedPassword)}
                         >
                         <Text style={{
                             backgroundColor: "#E3242B",
@@ -234,13 +216,9 @@ const ProfileScreen = ({navigation}) => {
                             LOG OUT
                         </Text>
                         </TouchableOpacity>
-
                 </View>
-
-
             </SafeAreaView>
         )
-
     }
 
     //Shows all the inputted screen

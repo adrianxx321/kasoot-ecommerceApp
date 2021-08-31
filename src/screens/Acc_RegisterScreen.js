@@ -3,21 +3,17 @@ import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Ale
 import { SafeAreaView } from "react-native-safe-area-context"
 import Toast from "react-native-toast-message"
 
-import * as firebase from "firebase"
 import * as FirebaseServices from "../services/firestore"
 
 import 'intl'
 import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_General } from "../components/ScreenRatio-General"
 
-
-
 const RegisterScreen = ({navigation}) => {
 
     const [typedEmail,setTypedEmail] = useState('');
     const [typedPassword, setTypedPassword] = useState('')
     const [typedConfirmPassword, setTypedConfirmPassword] = useState('')
-
 
     // Do Register & Data Verification
     const SignUpToApp = (typedEmail, typedPassword) => {
@@ -61,35 +57,6 @@ const RegisterScreen = ({navigation}) => {
         catch (error) {
             console.log(error)
         }
-    }
-
-
-    // Set the Header - Back Button
-    const renderHeader = () => {
-        return (
-            <SafeAreaView
-                style={{
-                    zIndex: 3,
-                    marginHorizontal: ScreenRatio_General(15),
-                    marginVertical: ScreenRatio_General(15),
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    position: "absolute",
-                    left: 0,
-                    right: 0
-                }}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate("Home Page")}
-                    //onPress={() => navigation.goBack()}
-                    >
-                    <Image
-                        source={require("../../assets/icons/back.png")}
-                        resizeMode="contain"
-                        style={styles.headerButtons}
-                    />
-                </TouchableOpacity>
-            </SafeAreaView>
-        )
     }
 
     // Set the Header Title
@@ -136,7 +103,6 @@ const RegisterScreen = ({navigation}) => {
                 }}>
                     Email
                 </Text>
-
                 <TextInput
                     placeholder="Your_Email@Email.com"
                     keyboardType= 'email-address'
@@ -158,9 +124,7 @@ const RegisterScreen = ({navigation}) => {
                             padding: 10,
                             width: ScreenRatio_General(430), 
                     }}
-                />             
-
-
+                /> 
 
                 {/* Ask Password */}
                 <Text
@@ -175,7 +139,6 @@ const RegisterScreen = ({navigation}) => {
                 }}>
                     Password
                 </Text>
-
                 <TextInput
                     placeholder="Your Password"
                     keyboardType= 'default'
@@ -213,7 +176,6 @@ const RegisterScreen = ({navigation}) => {
                 }}>
                     Confirm Password
                 </Text>
-
                 <TextInput
                     placeholder="Your Confirm Password"
                     keyboardType= 'default'
@@ -258,7 +220,6 @@ const RegisterScreen = ({navigation}) => {
                     }}
 
                     onPress={() => SignUpToApp(typedEmail,typedPassword)}
-                    //onPress={() => alert(typedPassword)}
                     >
                     <Text style={{
                         backgroundColor: "#de651d",
@@ -284,11 +245,9 @@ const RegisterScreen = ({navigation}) => {
                     >
 
                     <Text style={{
-                        //backgroundColor: "#000000",
                         color: "#000000",
                         fontWeight: "500",
                         paddingVertical: ScreenRatio_General(20),
-                        //borderRadius: ScreenRatio_General(32),
                         fontSize: ScreenRatio_General(18),
                         overflow: "hidden",
                         textAlign: "center",
@@ -305,7 +264,6 @@ const RegisterScreen = ({navigation}) => {
     return (
         <View>
             <ScrollView>
-                {/*renderHeader()*/}
                 {renderTitle()}
                 {renderLoginBox()}
             </ScrollView>

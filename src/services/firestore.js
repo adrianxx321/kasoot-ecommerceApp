@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
-import { RecyclerViewBackedScrollView } from "react-native";
+import { RecyclerViewBackedScrollView, Alert } from "react-native";
 import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
 import ProfileScreen from "../screens/Acc_ProfileScreen";
 
@@ -107,10 +107,7 @@ export async function signIn (email, password)  {
         await firebase.auth()
             .signInWithEmailAndPassword(email, password)
             .then(function (user) {
-                console.log(user)
-                //alert(user)
-                //alert("ABC")
-                
+                console.log(user)   // Log USER obj to console
             })
         } catch(e) {
             alert("Incorrect Email or Password!")
@@ -126,10 +123,8 @@ export async function signUp (email, password) {
         await firebase.auth()
             .createUserWithEmailAndPassword(email, password)
                 .then(function (user) {
-                console.log(user)
-            });
-
-        
+                console.log(user)   //Log USER obj to console
+            })
     } catch (e) {
         
         if (e.code === 'auth/email-already-in-use') {
@@ -139,7 +134,7 @@ export async function signUp (email, password) {
 
         if (e.code === 'auth/invalid-email') {
             alert("Please enter a valid email for register!")
-            console.log("Register FAILED: User entered an INVALID email format!")
+            console.log("Register FAILED: " + e.message)
         }
     }
 }
@@ -149,29 +144,34 @@ export async function signUp (email, password) {
 export async function signOut() {
     try {
         await firebase.auth().signOut();
-        alert('Successfully Logged out!')
+        Alert.alert(
+            "",
+            "Successfully Logged Out!",
+            [
+                {
+                    text: "OK",
+                    onPress: () => console.log("AlertBox: Logout Button Pressed & Sucessful perform LOGOUT")
+                }
+            ],
+            {cancelable: true}
+        )
     } catch (e) {
-        alert('error')
+        console.log("Logout FAILED: " + e.message)
     }
 }
 
 // Account - Get Current User's EMAIL
 export function getUserEmail() {
     try {
-        
-        //alert(firebase.auth().currentUser.email)
         return (firebase.auth().currentUser.email)
     } catch (e) {
-
     }
 }
 
 // Account - Get Current User's UID
 export function getUserID() {
     try {
-        //alert(firebase.auth().currentUser.uid)
         return (firebase.auth().currentUser.uid)
     } catch (e) {
-
     }
 }
