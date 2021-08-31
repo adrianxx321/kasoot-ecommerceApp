@@ -33,11 +33,11 @@ const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDisco
 
     useEffect(() => {
         const unsubscribe = navigation.addListener("focus", () => {
-            fetchWishlist("caXHZssX32hRElZez1uFRd7LTIN2")
+            fetchWishlist(FirebaseServices.getUserID())
         })
 
         // Fetch wishlist from Firebase
-        fetchWishlist("caXHZssX32hRElZez1uFRd7LTIN2")
+        fetchWishlist(FirebaseServices.getUserID())
 
         return unsubscribe
     }, [navigation])
@@ -87,12 +87,12 @@ const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDisco
                             if (wishlist.includes(prodID)) {
                                 // remove
                                 setWishlist(wishlist.filter((e)=>(e !== prodID)))
-                                FirebaseServices.removeFromWishlist("caXHZssX32hRElZez1uFRd7LTIN2", prodID)
+                                FirebaseServices.removeFromWishlist(FirebaseServices.getUserID(), prodID)
                             }
                             else {
                                 // add
                                 setWishlist([...wishlist, prodID])
-                                FirebaseServices.addToWishlist("caXHZssX32hRElZez1uFRd7LTIN2", prodID)
+                                FirebaseServices.addToWishlist(FirebaseServices.getUserID(), prodID)
                             }
                         }}>
                         <Image 

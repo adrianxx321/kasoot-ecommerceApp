@@ -6,7 +6,7 @@ import 'intl'
 import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_General } from "../components/ScreenRatio-General"
 
-import Toast from "react-native-toast-message"
+import * as FirebaseServices from "../services/firestore"
 
 // Currency formatter
 const formatter = Intl.NumberFormat('en-UK', {
@@ -35,9 +35,9 @@ const FlatListItem = ({ item, onPress, backgroundColor, textColor, borderColor }
     </TouchableOpacity>
 );
 
-const Payment = ({navigation}) => {
+const Payment = ({route, navigation}) => {
 
-    const amount = 2799.99;
+    const {amount} = route.params
 
     const [selectedId, setSelectedId] = useState('');
 
@@ -46,9 +46,7 @@ const Payment = ({navigation}) => {
     const [cardMonth, setcardMonth] = useState('');
     const [cardYear, setcardYear] = useState('');
     const [cardCVV, setcardCVV] = useState('');
-
     const [TnGPhoneNo, setTnGPhoneNo] = useState('');
-
     const [BoostPhoneNo, setBoostPhoneNo] = useState('');
 
     const renderHeader = () => {
@@ -152,8 +150,6 @@ const Payment = ({navigation}) => {
     }
 
     const renderPaymentFlatList = () => {
-        
-
         const renderItem = ({ item }) => {
             const backgroundColor = item.id === selectedId ? "#de651d" : "#c2c2c2";
             const color = item.id === selectedId ? 'white' : 'black';
@@ -198,7 +194,7 @@ const Payment = ({navigation}) => {
         );
     };
 
-    const renderBankCardInputForm = () => {  
+    const renderBankCardInputForm = () => {
         return (
             <SafeAreaView style={{
                 marginHorizontal: ScreenRatio_General(50),
@@ -352,7 +348,7 @@ const Payment = ({navigation}) => {
         )
     }
 
-    const renderTouchnGoInputForm = () => {  
+    const renderTouchnGoInputForm = () => {
         return (
             <SafeAreaView style={{
                 marginHorizontal: ScreenRatio_General(50),
@@ -396,7 +392,7 @@ const Payment = ({navigation}) => {
         )
     }
 
-    const renderBoostInputForm = () => {  
+    const renderBoostInputForm = () => {
         return (
             <SafeAreaView style={{
                 marginHorizontal: ScreenRatio_General(50),
@@ -435,7 +431,7 @@ const Payment = ({navigation}) => {
                             padding: 10,
                             width: ScreenRatio_General(365), 
                     }}
-                />             
+                />
             </SafeAreaView>
         )
     }
@@ -480,14 +476,8 @@ const Payment = ({navigation}) => {
             <SafeAreaView>
                 <TouchableOpacity
                     onPress={() => {
-                        Toast.show({
-                            type: "success",
-                            position: "bottom",
-                            text1: "Payment Successful!",
-                            text2: "Order Placed!", 
-                            visibilityTime: 1000,
-                            bottomOffset: ScreenRatio_General(110),
-                        })
+                        FirebaseServices.deleteCart(FirebaseServices.getUserID())
+                        navigation.navigate("Home Page")
                     }}>
                     <Text style={{
                         backgroundColor: "#000000",
@@ -507,14 +497,8 @@ const Payment = ({navigation}) => {
         )
     }
 
-    const paymentSuccessfulToast = () => {
-        return (
-            <Toast ref={(ref => Toast.setRef(ref))}/>
-        )
-    }
-
     return (
-        <View>             
+        <View>
             <ScrollView>
             {renderHeader()}
             {renderTitle()}           
@@ -523,7 +507,6 @@ const Payment = ({navigation}) => {
             {renderPaymentFlatList()}
             {renderPaymentSelection()}
             {renderPaymentButton()}
-            {paymentSuccessfulToast()}
             </ScrollView>          
         </View>
     )  

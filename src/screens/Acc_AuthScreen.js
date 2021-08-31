@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Alert, FlatList, ScrollView } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
-import Toast from "react-native-toast-message"
+import { View } from "react-native"
 
 import * as firebase from "firebase"
-import * as FirebaseServices from "../services/firestore"
-
-import auth from 'firebase/auth'
 
 import 'intl'
 import 'intl/locale-data/jsonp/en'
-import { ScreenRatio_General } from "../components/ScreenRatio-General"
-import { out } from "react-native/Libraries/Animated/src/Easing"
 
 // Check the user is logged in or not
 const CheckLogin = ({navigation}) => {

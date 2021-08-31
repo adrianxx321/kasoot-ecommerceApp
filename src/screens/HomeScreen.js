@@ -22,11 +22,7 @@ const CategoriesFlatList = ({ item, onPress, textColor, underline }) => (
     </TouchableOpacity>
 )
 
-
-
-
 const HomeScreen = ({navigation}) => {
-
     const shoeCategories = [
         {
             id: "0",

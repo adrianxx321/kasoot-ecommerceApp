@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, TouchableWithoutFeedback } from "react-native"
+import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import ProductCard from "../components/ProductCard"
 
@@ -43,11 +43,11 @@ const Wishlist = ({navigation}) => {
 
     useEffect(() => {
         const unsubscribe = navigation.addListener("focus", () => {
-            fetchWishlist("caXHZssX32hRElZez1uFRd7LTIN2")
+            fetchWishlist(FirebaseServices.getUserID())
             queryProducts()
         })
 
-        fetchWishlist("caXHZssX32hRElZez1uFRd7LTIN2")
+        fetchWishlist(FirebaseServices.getUserID())
         queryProducts()
 
         return unsubscribe

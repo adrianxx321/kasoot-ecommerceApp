@@ -13,6 +13,7 @@ import 'intl/locale-data/jsonp/en';
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
 import Toast from "react-native-toast-message"
+
 // Currency formatter
 const formatter = Intl.NumberFormat('en-UK', {
     style: "currency",
@@ -70,8 +71,8 @@ const Product = ({route, navigation}) => {
 
     useEffect(() => {
         fetchProduct(shoeID)
-        fetchWishlist("caXHZssX32hRElZez1uFRd7LTIN2")
-        fetchCart("caXHZssX32hRElZez1uFRd7LTIN2")
+        fetchWishlist(FirebaseServices.getUserID())
+        fetchCart(FirebaseServices.getUserID())
     }, [])
 
     // Back and "more options" buttons ...
@@ -269,12 +270,12 @@ const Product = ({route, navigation}) => {
                             if (wishlist.includes(product.id)) {
                                 // remove
                                 setWishlist(wishlist.filter((e)=>(e !== product.id)))
-                                FirebaseServices.removeFromWishlist("caXHZssX32hRElZez1uFRd7LTIN2", product.id)
+                                FirebaseServices.removeFromWishlist(FirebaseServices.getUserID(), product.id)
                             }
                             else {
                                 // add
                                 setWishlist([...wishlist, product.id])
-                                FirebaseServices.addToWishlist("caXHZssX32hRElZez1uFRd7LTIN2", product.id)
+                                FirebaseServices.addToWishlist(FirebaseServices.getUserID(), product.id)
                             }
                         }}>
                         <View style={{
@@ -307,7 +308,7 @@ const Product = ({route, navigation}) => {
                                 newCart[index].quantity += 1
                                 
                                 setCart(newCart)
-                                FirebaseServices.addToCartDup("caXHZssX32hRElZez1uFRd7LTIN2", newCart)
+                                FirebaseServices.addToCartDup(FirebaseServices.getUserID(), newCart)
                             }
                             else {
                                 // Add new cart item to dataabse
@@ -324,7 +325,7 @@ const Product = ({route, navigation}) => {
                                 })
                                 
                                 setCart(newCart)
-                                FirebaseServices.addToCart("caXHZssX32hRElZez1uFRd7LTIN2", newCart[newCart.length - 1])
+                                FirebaseServices.addToCart(FirebaseServices.getUserID(), newCart[newCart.length - 1])
                             }
                             Toast.show({
                                 type: "success",
@@ -336,7 +337,6 @@ const Product = ({route, navigation}) => {
                             })
                         }}>
                         <Text style={{
-                            backgroundColor: "#000000",
                             fontWeight: "500",
                             backgroundColor: (selectedSize != null) ? "#000000" : "#d6d6d6",
                             color: (selectedSize != null) ? "#ffffff" : "#93959e",

@@ -1,9 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
-import { RecyclerViewBackedScrollView, Alert } from "react-native";
-import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
-import ProfileScreen from "../screens/Acc_ProfileScreen";
+import { Alert } from "react-native";
 
 // Initialize database
 const firebaseConfig = {
@@ -99,6 +97,11 @@ export const addToCartDup = async (uid, newCart) => {
     }
 }
 
+export const deleteCart = async (uid) => {
+    await db.collection("cart").doc(uid).update({
+        cart: firebase.firestore.FieldValue.delete()
+    })
+}
 
 // Account - Login
 export async function signIn (email, password)  {
@@ -115,7 +118,6 @@ export async function signIn (email, password)  {
         }
 }
 
-
 // Account - Register
 export async function signUp (email, password) {
 
@@ -124,6 +126,16 @@ export async function signUp (email, password) {
             .createUserWithEmailAndPassword(email, password)
                 .then(function (user) {
                 console.log(user)   //Log USER obj to console
+
+                // Create a new cart document for the new user
+                db.collection("cart").doc(user.user.uid).set({
+                    cart: []
+                })
+
+                // Create a new wishlist document for the new user
+                db.collection("wishlist").doc(user.user.uid).set({
+                    products: []
+                })
             })
     } catch (e) {
         
@@ -138,7 +150,6 @@ export async function signUp (email, password) {
         }
     }
 }
-
 
 // Account - Logout
 export async function signOut() {

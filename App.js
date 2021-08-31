@@ -21,13 +21,6 @@ import { LogBox } from "react-native";
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log nitification by msg
 LogBox.ignoreAllLogs(); // Ignore all log nitifications
 
-
-
-
-
-
-
-
 const Stack = createStackNavigator()
 
 export default function App() {
@@ -35,10 +28,8 @@ export default function App() {
     <NavigationContainer>
         <Stack.Navigator 
           headerMode="none"
-          initialRouteName='AuthScreen' ///the name of the initial screen
-          >
-
-
+          initialRouteName='AuthScreen' // the name of the initial screen
+        >
           <Stack.Screen name="Home Page" component={HomeScreen} />
 
           {/* CALVIN -  Stack */}

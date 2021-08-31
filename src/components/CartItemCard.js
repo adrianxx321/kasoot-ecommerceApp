@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, TouchableWithoutFeedback } from "react-native"
 import Animated from "react-native-reanimated";
 import { Swipeable } from "react-native-gesture-handler";
@@ -51,7 +51,7 @@ const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDisco
 
         setQty(qtyParam)
         setCart(cartItems)
-        FirebaseServices.addToCartDup("caXHZssX32hRElZez1uFRd7LTIN2", cartItems)
+        FirebaseServices.addToCartDup(FirebaseServices.getUserID(), cartItems)
     }
 
     const removeItem = () => {
@@ -59,7 +59,7 @@ const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDisco
         cartItems.splice(index, 1)
 
         setCart(cartItems)
-        FirebaseServices.addToCartDup("caXHZssX32hRElZez1uFRd7LTIN2", cartItems)
+        FirebaseServices.addToCartDup(FirebaseServices.getUserID(), cartItems)
     }
 
     return (

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, TouchableWithoutFeedback } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import * as algolia from "../services/algolia"
 import CartItemCard from "../components/CartItemCard"
 
 import * as FirebaseServices from "../services/firestore"
@@ -40,11 +39,11 @@ const BagScreen = ({navigation}) => {
 
     useEffect(() => {
         const unsubscribe = navigation.addListener("focus", () => {
-            fetchCart("caXHZssX32hRElZez1uFRd7LTIN2")
+            fetchCart(FirebaseServices.getUserID())
         })
 
         // Fetch products (not from Firebase)
-        fetchCart("caXHZssX32hRElZez1uFRd7LTIN2")
+        fetchCart(FirebaseServices.getUserID())
 
         return unsubscribe
     }, [navigation, cartItems])
@@ -120,11 +119,11 @@ const BagScreen = ({navigation}) => {
                     <Text style={{fontSize: ScreenRatio_iPhone(26)}}>{formatter.format(getTotalPrice(cartItems))}</Text>
                 </View>
                 <TouchableOpacity
-                    style={{}}
-                    onPress={() => navigation.navigate("Checkout")}>
+                    disabled={!cartItems.length > 0}
+                    onPress={() => navigation.navigate("Checkout", {amount: getTotalPrice(cartItems)})}>
                     <Text style={{
-                        backgroundColor: "#000000",
-                        color: "#ffffff",
+                        backgroundColor: (cartItems.length > 0) ? "#000000" : "#d6d6d6",
+                        color: (cartItems.length > 0) ? "#ffffff" : "#93959e",
                         fontWeight: "500",
                         paddingVertical: ScreenRatio_iPhone(16),
                         borderRadius: ScreenRatio_iPhone(32),
