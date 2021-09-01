@@ -482,7 +482,7 @@ const Payment = ({route, navigation}) => {
                                     if (cardName != '' && cardNumber != '' && cardMonth != '' && cardYear != '' && cardCVV != ''){  
                                         Alert.alert(
                                             "Payment Successful",
-                                            "Your order has been placed!",
+                                            "Payment Method: BANK CARD \n\nYour order has been placed!",
                                             [
                                                 {
                                                     text: "OK",
@@ -499,8 +499,8 @@ const Payment = ({route, navigation}) => {
                                         Toast.show({
                                             type: "error",
                                             position: "bottom",
-                                            text1: "Payment Unsuccessful!",
-                                            text2: "Please complete all the nessary information! --- BANK", 
+                                            text1: "(Bank Card) Payment Unsuccessful!",
+                                            text2: "Please complete all the nessary information!", 
                                             visibilityTime: 1000,
                                             bottomOffset: ScreenRatio_General(110),
                                         })
@@ -511,7 +511,7 @@ const Payment = ({route, navigation}) => {
                                         
                                         Alert.alert(
                                             "Payment Successful",
-                                            "Your order has been placed!",
+                                            "Payment Method: TOUCH N GO \n\nYour order has been placed!",
                                             [
                                                 {
                                                     text: "OK",
@@ -528,8 +528,8 @@ const Payment = ({route, navigation}) => {
                                         Toast.show({
                                             type: "error",
                                             position: "bottom",
-                                            text1: "Payment Unsuccessful!",
-                                            text2: "Please complete all the nessary information! --- TNG", 
+                                            text1: "(Touch n Go) Payment Unsuccessful!",
+                                            text2: "Please complete all the nessary information!", 
                                             visibilityTime: 1000,
                                             bottomOffset: ScreenRatio_General(110),
                                         })
@@ -540,7 +540,7 @@ const Payment = ({route, navigation}) => {
                                         
                                         Alert.alert(
                                             "Payment Successful",
-                                            "Your order has been placed!",
+                                            "Payment Method: BOOST \n\nYour order has been placed!",
                                             [
                                                 {
                                                     text: "OK",
@@ -557,8 +557,8 @@ const Payment = ({route, navigation}) => {
                                         Toast.show({
                                             type: "error",
                                             position: "bottom",
-                                            text1: "Payment Unsuccessful!",
-                                            text2: "Please complete all the nessary information! --- BOOST", 
+                                            text1: "(Boost) Payment Unsuccessful!",
+                                            text2: "Please complete all the nessary information!", 
                                             visibilityTime: 1000,
                                             bottomOffset: ScreenRatio_General(110),
                                         })
