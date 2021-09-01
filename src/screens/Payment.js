@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Component } from "react"
 import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Alert, FlatList, ScrollView } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
+import Toast from "react-native-toast-message"
 
 import 'intl'
 import 'intl/locale-data/jsonp/en'
@@ -475,15 +476,100 @@ const Payment = ({route, navigation}) => {
         return (
             <SafeAreaView>
                 <TouchableOpacity
+                    disabled={(selectedId == '') ? true : false}
                     onPress={() => {
-                        FirebaseServices.deleteCart(FirebaseServices.getUserID())
-                        navigation.navigate("Home Page")
+                                if (selectedId == "1") {
+                                    if (cardName != '' && cardNumber != '' && cardMonth != '' && cardYear != '' && cardCVV != ''){  
+                                        Alert.alert(
+                                            "Payment Successful",
+                                            "Your order has been placed!",
+                                            [
+                                                {
+                                                    text: "OK",
+                                                    onPress: () => console.log("AlertBox: PAYMENT SUCCESSFUL --- BANK")
+                                                }
+                                            ],
+                                            {cancelable: true}
+                                        )
+
+                                        FirebaseServices.deleteCart(FirebaseServices.getUserID())
+                                        navigation.navigate("Home Page")
+                                    }
+                                    else {
+                                        Toast.show({
+                                            type: "error",
+                                            position: "bottom",
+                                            text1: "Payment Unsuccessful!",
+                                            text2: "Please complete all the nessary information! --- BANK", 
+                                            visibilityTime: 1000,
+                                            bottomOffset: ScreenRatio_General(110),
+                                        })
+                                    }
+                                }
+                                else if (selectedId == "2") {
+                                    if (TnGPhoneNo != ''){     
+                                        
+                                        Alert.alert(
+                                            "Payment Successful",
+                                            "Your order has been placed!",
+                                            [
+                                                {
+                                                    text: "OK",
+                                                    onPress: () => console.log("AlertBox: PAYMENT SUCCESSFUL --- TNG")
+                                                }
+                                            ],
+                                            {cancelable: true}
+                                        )
+
+                                        FirebaseServices.deleteCart(FirebaseServices.getUserID())
+                                        navigation.navigate("Home Page")
+                                    }
+                                    else {
+                                        Toast.show({
+                                            type: "error",
+                                            position: "bottom",
+                                            text1: "Payment Unsuccessful!",
+                                            text2: "Please complete all the nessary information! --- TNG", 
+                                            visibilityTime: 1000,
+                                            bottomOffset: ScreenRatio_General(110),
+                                        })
+                                    }
+                                }
+                                else if (selectedId == "3") {
+                                    if (BoostPhoneNo != ''){        
+                                        
+                                        Alert.alert(
+                                            "Payment Successful",
+                                            "Your order has been placed!",
+                                            [
+                                                {
+                                                    text: "OK",
+                                                    onPress: () => console.log("AlertBox: PAYMENT SUCCESSFUL --- BOOST")
+                                                }
+                                            ],
+                                            {cancelable: true}
+                                        )
+
+                                        FirebaseServices.deleteCart(FirebaseServices.getUserID())
+                                        navigation.navigate("Home Page")
+                                    }
+                                    else {
+                                        Toast.show({
+                                            type: "error",
+                                            position: "bottom",
+                                            text1: "Payment Unsuccessful!",
+                                            text2: "Please complete all the nessary information! --- BOOST", 
+                                            visibilityTime: 1000,
+                                            bottomOffset: ScreenRatio_General(110),
+                                        })
+                                    }
+                                }
                     }}>
                     <Text style={{
-                        backgroundColor: "#000000",
+                        backgroundColor: (selectedId == '') ? "#d6d6d6" : "#000000",
                         marginVertical: ScreenRatio_General(20),
                         marginHorizontal: ScreenRatio_General(120),
-                        color: "#ffffff",
+                        color: (selectedId == '') ? "#93959e" : "#ffffff",
                         paddingVertical: ScreenRatio_General(20),
                         borderRadius: ScreenRatio_General(35),
                         fontSize: ScreenRatio_General(22),
@@ -497,6 +583,13 @@ const Payment = ({route, navigation}) => {
         )
     }
 
+    const paymentToast = () => {
+        return (
+            <Toast ref={(ref => Toast.setRef(ref))}/>
+        )
+    }
+
+
     return (
         <View>
             <ScrollView>
@@ -507,6 +600,7 @@ const Payment = ({route, navigation}) => {
             {renderPaymentFlatList()}
             {renderPaymentSelection()}
             {renderPaymentButton()}
+            {paymentToast()}
             </ScrollView>          
         </View>
     )  
