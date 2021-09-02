@@ -500,7 +500,7 @@ const Payment = ({route, navigation}) => {
                                             type: "error",
                                             position: "bottom",
                                             text1: "(Bank Card) Payment Unsuccessful!",
-                                            text2: "Please complete all the nessary information!", 
+                                            text2: "Please complete all the necessary information!", 
                                             visibilityTime: 1000,
                                             bottomOffset: ScreenRatio_General(110),
                                         })
@@ -529,7 +529,7 @@ const Payment = ({route, navigation}) => {
                                             type: "error",
                                             position: "bottom",
                                             text1: "(Touch n Go) Payment Unsuccessful!",
-                                            text2: "Please complete all the nessary information!", 
+                                            text2: "Please complete all the necessary information!", 
                                             visibilityTime: 1000,
                                             bottomOffset: ScreenRatio_General(110),
                                         })
@@ -558,7 +558,7 @@ const Payment = ({route, navigation}) => {
                                             type: "error",
                                             position: "bottom",
                                             text1: "(Boost) Payment Unsuccessful!",
-                                            text2: "Please complete all the nessary information!", 
+                                            text2: "Please complete all the necessary information!", 
                                             visibilityTime: 1000,
                                             bottomOffset: ScreenRatio_General(110),
                                         })
