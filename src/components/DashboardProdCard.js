@@ -110,7 +110,7 @@ const DashboardProdCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, pro
                     <Text style={[styles.cardText, {textDecorationLine: (prodDiscount) ? "line-through" : "none"}]}>
                         {formatter.format(prodPrice)}
                     </Text>
-                    <Text style={[styles.cardText, {display: (prodDiscount) ? "flex" : "none", fontWeight: "bold", color: "#de651d", lineHeight: ScreenRatio_iPhone(0)}]}>
+                    <Text style={[styles.cardText, {display: (prodDiscount) ? "flex" : "none", fontWeight: "bold", color: "#de651d"}]}>
                         {formatter.format(prodPrice * (1 - prodDiscount / 100))}
                     </Text>
                 </View>
