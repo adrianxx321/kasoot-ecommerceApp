@@ -27,6 +27,7 @@ const Product = ({route, navigation}) => {
     const [selectedSize, setSelectedSize] = useState(null)
     const [wishlist, setWishlist] = useState([])
     const [cart, setCart] = useState([])
+    const [scrollX, setScrollX] = useState(new Animated.Value(0))
 
     const fetchProduct = async (shoeID) => {
         try {
@@ -73,7 +74,7 @@ const Product = ({route, navigation}) => {
         fetchProduct(shoeID)
         fetchWishlist(FirebaseServices.getUserID())
         fetchCart(FirebaseServices.getUserID())
-    }, [])
+    }, [scrollX])
 
     // Back and "more options" buttons ...
     const renderHeader = () => {
@@ -103,8 +104,6 @@ const Product = ({route, navigation}) => {
     
     // Product images (carousell) ...
     const renderShoeImages = () => {
-        const scrollX = new Animated.Value(0)
-        
         return (
             <Animated.View
                 style={[
