@@ -42,7 +42,6 @@ const BagScreen = ({navigation}) => {
             fetchCart(FirebaseServices.getUserID())
         })
 
-        // Fetch products (not from Firebase)
         fetchCart(FirebaseServices.getUserID())
 
         return unsubscribe
