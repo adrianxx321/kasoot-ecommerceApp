@@ -228,7 +228,7 @@ const Product = ({route, navigation}) => {
                     }
                 </ScrollView>
                 {/* Product description & delivery policies... */}
-                <View style={{marginVertical: ScreenRatio_iPhone(30)}}>
+                <View style={{marginTop: ScreenRatio_iPhone(30), marginBottom: ScreenRatio_iPhone(100)}}>
                     <CollapsibleList title={"Description"}>
                         <Text style={styles.prodDescriptions}>{product.prodDesc}</Text>
                     </CollapsibleList>
