@@ -105,6 +105,16 @@ const SearchScreen = ({navigation}) => {
                         onChangeText={(input) => setSearch(input)}
                         style={{width: "70%", flexShrink: 1, fontSize: ScreenRatio_iPhone(18)}}
                         value={search}
+                        onSubmitEditing={() => {
+                            if(search.length > 0) {
+                                setSearchHistoryList(searchHistoryList => [{
+                                    id: searchHistoryList.length.toString(),
+                                    phrase: search
+                                }, ...searchHistoryList]);
+                                updateSearchHistory(searchHistoryList);
+                                navigation.navigate("Search Products", {passedSearchTerm: search})
+                            }
+                        }}
                     />
                     <TouchableWithoutFeedback onPress={() => setSearch("")}>
                         <Image
