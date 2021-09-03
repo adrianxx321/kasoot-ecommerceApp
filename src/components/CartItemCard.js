@@ -15,11 +15,13 @@ const formatter = Intl.NumberFormat('en-UK', {
     currency: "MYR"
 })
 
-const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDiscount, sizeType, size, quantity, index, cartArray}) => {
+/* This is a card view component made for the Bag Screen */
+const CartItemCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDiscount, sizeType, size, quantity, index, cartArray}) => {
     const navigation = useNavigation()
     const [qty, setQty] = useState(quantity)
     const [cart, setCart] = useState(cartArray)
 
+    /* Swiping to the left brings up a delete (trash can icon) button */
     const rightSwipe = () => {
         return (
             <TouchableOpacity
@@ -45,8 +47,11 @@ const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDisco
         )
     }
 
+    /* When user increase/decrease item quantity, this function is called to update the item in the cart */
     const modifyCart = (qtyParam) => {
         let cartItems = cart
+        
+        /* Create a temporary updated cart item */
         cartItems[index].quantity = qtyParam
 
         setQty(qtyParam)
@@ -56,6 +61,8 @@ const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDisco
 
     const removeItem = () => {
         let cartItems = cart
+
+        /* Remove an item from the cart item array */
         cartItems.splice(index, 1)
 
         setCart(cartItems)
@@ -94,24 +101,30 @@ const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDisco
                         marginTop: ScreenRatio_iPhone(12),
                         width: "100%",
                     }}>
+                        {/* Shoe name... */}
                         <Text style={[styles.itemInfoText, {fontWeight: "bold"}]}>
                             {prodBrand} {prodName}
                         </Text>
+                        {/* Selected shoe size... */}
                         <Text style={[styles.itemInfoText, {color: "#a3a3a3"}]}>
                             Size: {size} ({sizeType})
                         </Text>
+                        {/* Shoe price (before/without discount) ... */}
                         <Text style={[styles.priceText, {textDecorationLine: (prodDiscount) ? "line-through" : "none"}]}>
                             {formatter.format(prodPrice)}
                         </Text>
+                        {/* Shoe price after discount (if any)... */}
                         <Text style={[styles.priceText, {display: (prodDiscount) ? "flex" : "none", fontWeight: "bold", color: "#de651d"}]}>
                             {formatter.format(prodPrice * (1 - prodDiscount / 100))}
                         </Text>
+                        {/* Add/minus icon for increasing/decreasing item quantity... */}
                         <View style={{
                             flexDirection: "row",
                             alignItems: "center",
                         }}>
                             <TouchableOpacity
                                 onPress={() => {
+                                    /* Do not decrease the quantity if it's only 1 */
                                     if(qty >= 2) {
                                         modifyCart(qty - 1)
                                     }
@@ -151,4 +164,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ProductCard
+export default CartItemCard
