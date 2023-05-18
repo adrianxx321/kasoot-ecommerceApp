@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from "react-native"
+import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Alert } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Animated from "react-native-reanimated"
 import Paginator from "../components/Paginator"
@@ -34,7 +34,12 @@ const Product = ({route, navigation}) => {
             const response = await FirebaseServices.getShoe(shoeID).get()
 
             if(response.exists) {
-                setProduct(response.data())
+                let prod = response.data()
+                // Append id property after appending the queried shoe itself
+                // as Firestore by default doesn't include id in returned document
+                prod.id = response.id
+
+                setProduct(prod)
                 setLoading(false)
             }
         } catch(err) {
@@ -269,12 +274,12 @@ const Product = ({route, navigation}) => {
                             if (wishlist.includes(product.id)) {
                                 // remove
                                 setWishlist(wishlist.filter((e)=>(e !== product.id)))
-                                FirebaseServices.removeFromWishlist(FirebaseServices.getUserID(), product.id)
+                                FirebaseServices.removeShoeFromWishlist(FirebaseServices.getUserID(), product.id)
                             }
                             else {
                                 // add
                                 setWishlist([...wishlist, product.id])
-                                FirebaseServices.addToWishlist(FirebaseServices.getUserID(), product.id)
+                                FirebaseServices.addToShoeWishlist(FirebaseServices.getUserID(), product.id)
                             }
                         }}>
                         <View style={{

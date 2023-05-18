@@ -77,12 +77,12 @@ const DashboardProdCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, pro
                                 if (wishlist.includes(prodID)) {
                                     // remove
                                     setWishlist(wishlist.filter((e)=>(e !== prodID)))
-                                    FirebaseServices.removeFromWishlist(FirebaseServices.getUserID(), prodID)
+                                    FirebaseServices.removeShoeFromWishlist(FirebaseServices.getUserID(), prodID)
                                 }
                                 else {
                                     // add
                                     setWishlist([...wishlist, prodID])
-                                    FirebaseServices.addToWishlist(FirebaseServices.getUserID(), prodID)
+                                    FirebaseServices.addToShoeWishlist(FirebaseServices.getUserID(), prodID)
                                 }
                             }}>
                             <Image 

@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
-import "firebase/auth";
+import "@firebase/auth";
 import { Alert } from "react-native";
 
 // Initialize database
@@ -45,24 +45,24 @@ export const getWishlist = (uid) => {
     return db.collection("wishlist").doc(uid)
 }
 
-export const addToWishlist = async (uid, prodID) => {
+export const addToShoeWishlist = async (uid, prodRef) => {
     const response = await getWishlist(uid)
 
     try {
         response.update({
-            products: firebase.firestore.FieldValue.arrayUnion(prodID)
+            shoes: firebase.firestore.FieldValue.arrayUnion(db.doc(`shoes/${prodRef}`))
         });
     } catch(err) {
         console.error(err)
     }
 }
 
-export const removeFromWishlist = async (uid, prodID) => {
+export const removeShoeFromWishlist = async (uid, prodRef) => {
     const response = await getWishlist(uid)
 
     try {
         response.update({
-            products: firebase.firestore.FieldValue.arrayRemove(prodID)
+            shoes: firebase.firestore.FieldValue.arrayRemove(db.doc(`shoes/${prodRef}`))
         });
     } catch(err) {
         console.error(err)
