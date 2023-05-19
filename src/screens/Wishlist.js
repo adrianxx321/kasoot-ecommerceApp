@@ -17,10 +17,10 @@ const fetchWishlistAndProds = async (uid) => {
       
       if (wishlistResponse.exists) {
           const wishlistData = wishlistResponse.data();
-          setWishlist(wishlistData.shoes);
+          setWishlist(wishlistData.products);
           
-          if (wishlistData.shoes.length > 0) {
-            const productResponse = await FirebaseServices.getShoesByID(wishlistData.shoes);
+          if (wishlistData.products.length > 0) {
+            const productResponse = await FirebaseServices.getProdsByID(wishlistData.products);
             const productsData = [];
             
             productResponse.docs.forEach((shoe) => {
@@ -52,12 +52,12 @@ const handleLikeUnlike = async (product, isLiked) => {
 
   try {
     if (isLiked) {
-      await FirebaseServices.addToShoeWishlist(uid, product.id);
+      await FirebaseServices.addProdToWishlist(uid, product.id);
 
       setWishlist([...wishlist, product.id]);
       setProducts([...products, product]); // Push the product directly
     } else {
-      await FirebaseServices.removeShoeFromWishlist(uid, product.id);
+      await FirebaseServices.removeProdFromWishlist(uid, product.id);
 
       setWishlist(wishlist.filter((e) => e !== product.id));
       setProducts(products.filter((e) => e.id !== product.id)); // Filter out the item by its id

@@ -21,48 +21,48 @@ else {
 
 const db = firebase.firestore()
 
-export const getAllShoes = () => {
-    return db.collection("shoes").get()
+export const getAllProds = () => {
+    return db.collection("products").get()
 }
 
-export const getShoeByCat = (category) => {
-    return db.collection("shoes").where("prodCat", "==", category).get()
+export const getProdByCat = (category) => {
+    return db.collection("products").where("prodCat", "==", category).get()
 }
 
-export const getOtherShoes = () => {
-    return db.collection("shoes").where("prodCat", "not-in", ["Sneakers", "Slippers"]).get()
+export const getOtherProds = () => {
+    return db.collection("products").where("prodCat", "not-in", ["Sneakers", "Slippers"]).get()
 }
 
-export const getShoe = (shoeID) => {
-    return db.collection("shoes").doc(shoeID)
+export const getProduct = (shoeID) => {
+    return db.collection("products").doc(shoeID)
 }
 
-export const getShoesByID = (shoeIDArr) => {
-    return db.collection('shoes').where(firebase.firestore.FieldPath.documentId(), 'in', shoeIDArr).get()
+export const getProdsByID = (prodIDArr) => {
+    return db.collection('products').where(firebase.firestore.FieldPath.documentId(), 'in', prodIDArr).get()
 }
 
 export const getWishlist = (uid) => {
     return db.collection("wishlist").doc(uid)
 }
 
-export const addToShoeWishlist = async (uid, prodID) => {
+export const addProdToWishlist = async (uid, prodID) => {
     const response = await getWishlist(uid)
 
     try {
         response.update({
-            shoes: firebase.firestore.FieldValue.arrayUnion(prodID)
+            products: firebase.firestore.FieldValue.arrayUnion(prodID)
         });
     } catch(err) {
         console.error(err)
     }
 }
 
-export const removeShoeFromWishlist = async (uid, prodID) => {
+export const removeProdFromWishlist = async (uid, prodID) => {
     const response = await getWishlist(uid)
 
     try {
         response.update({
-            shoes: firebase.firestore.FieldValue.arrayRemove(prodID)
+            products: firebase.firestore.FieldValue.arrayRemove(prodID)
         });
     } catch(err) {
         console.error(err)

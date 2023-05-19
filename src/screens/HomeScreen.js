@@ -51,13 +51,13 @@ const HomeScreen = ({navigation}) => {
             
             switch(category) {
                 case "0":
-                    response = await FirebaseServices.getAllShoes()
+                    response = await FirebaseServices.getAllProds()
                     break
                 case "3":
-                    response = await FirebaseServices.getOtherShoes()
+                    response = await FirebaseServices.getOtherProds()
                     break
                 default:
-                    response = await FirebaseServices.getShoeByCat(shoeCategories[parseInt(catID)].title)
+                    response = await FirebaseServices.getProdByCat(shoeCategories[parseInt(catID)].title)
                     break
             }
 

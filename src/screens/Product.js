@@ -31,7 +31,7 @@ const Product = ({route, navigation}) => {
 
     const fetchProduct = async (shoeID) => {
         try {
-            const response = await FirebaseServices.getShoe(shoeID).get()
+            const response = await FirebaseServices.getProduct(shoeID).get()
 
             if(response.exists) {
                 let prod = response.data()
@@ -52,7 +52,7 @@ const Product = ({route, navigation}) => {
             const response = await FirebaseServices.getWishlist(uid).get()
 
             if(response.exists) {
-                setWishlist(response.data().shoes)
+                setWishlist(response.data().products)
             }
         } catch(err) {
             console.error(err)
@@ -272,12 +272,12 @@ const Product = ({route, navigation}) => {
                             if (wishlist.includes(product.id)) {
                                 // remove
                                 setWishlist(wishlist.filter((e)=>(e !== product.id)))
-                                FirebaseServices.removeShoeFromWishlist(FirebaseServices.getUserID(), product.id)
+                                FirebaseServices.removeProdFromWishlist(FirebaseServices.getUserID(), product.id)
                             }
                             else {
                                 // add
                                 setWishlist([...wishlist, product.id])
-                                FirebaseServices.addToShoeWishlist(FirebaseServices.getUserID(), product.id)
+                                FirebaseServices.addProdToWishlist(FirebaseServices.getUserID(), product.id)
                             }
                         }}>
                         <View style={{

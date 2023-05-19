@@ -22,7 +22,7 @@ const DashboardProdCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, pro
             const response = await FirebaseServices.getWishlist(uid).get()
 
             if(response.exists) {
-                setWishlist(response.data().shoes)
+                setWishlist(response.data().products)
             }
         } catch(err) {
             console.error(err)
@@ -75,12 +75,12 @@ const DashboardProdCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, pro
                                 if (wishlist.includes(prodID)) {
                                     // remove
                                     setWishlist(wishlist.filter((e)=>(e !== prodID)))
-                                    FirebaseServices.removeShoeFromWishlist(FirebaseServices.getUserID(), prodID)
+                                    FirebaseServices.removeProdFromWishlist(FirebaseServices.getUserID(), prodID)
                                 }
                                 else {
                                     // add
                                     setWishlist([...wishlist, prodID])
-                                    FirebaseServices.addToShoeWishlist(FirebaseServices.getUserID(), prodID)
+                                    FirebaseServices.addProdToWishlist(FirebaseServices.getUserID(), prodID)
                                 }
                             }}>
                             <Image 
