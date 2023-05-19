@@ -10,57 +10,51 @@ import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
 const Wishlist = ({navigation}) => {
-    const [loading, setLoading] = useState(true)
-    const [wishlistIds, fetchWishlistIds] = useState([])
-    const [products, fetchProducts] = useState([])
+    const [wishlist, setWishList] = useState([])
+    const [products, setProducts] = useState([])
 
     const fetchWishlist = async (uid) => {
         try {
             const response = await FirebaseServices.getWishlist(uid).get()
-            
+        
             if(response.exists) {
-                fetchWishlistIds(response.data().shoes)
-                setLoading(false)
+                setWishList(response.data().shoes)
             }
-        } catch(err) {
+        }
+        catch(err) {
             console.error(err)
         }
     }
-    
-    const queryProducts = async (ids) => {
+
+    const fetchProds = async (ids) => {
         try {
             var result = []
             const response = await FirebaseServices.getShoesByID(ids)
-            
+
             if(!response.empty) {
-                response.forEach(doc => {
-                    result.push(doc.data())
-                    // Append id property after appending the queried shoe itself
-                    // as Firestore by default doesn't include id in returned document
-                    result[result.length - 1].id = doc.id
+                response.docs.forEach((shoe) => {
+                    result.push(shoe.data())
+                    result[result.length - 1].id = shoe.id
                 })
-                fetchProducts(result)
+                setProducts(result)
             }
-        } catch(err) {
+        }
+        catch(err) {
             console.error(err)
         }
     }
 
     useEffect(() => {
         const unsubscribe = navigation.addListener("focus", () => {
-            // console.log(`(2) Getting wishlist...\n${wishlistIds.length > 0 ? wishlistIds : 'No wishlist found'}`)
             fetchWishlist(FirebaseServices.getUserID())
-            if(!loading) { queryProducts(wishlistIds) }
-            // console.log(`(2) Getting shoes from wishlist...\n${products.length > 0 ? products : 'No shoes found'}`)
+            fetchProds(wishlist)
         })
 
-        // console.log(`(1) Getting wishlist...\n${wishlistIds.length > 0 ? wishlistIds : 'No wishlist found'}`)
         fetchWishlist(FirebaseServices.getUserID())
-        if(!loading) { queryProducts(wishlistIds) }
-        // console.log(`(1) Getting shoes from wishlist...\n${products.length > 0 ? products : 'No shoes found'}`)
+        fetchProds(wishlist)
 
         return unsubscribe
-    }, [navigation, wishlistIds, products])
+    }, [navigation, wishlist, products])
 
     const renderHeader = () => {
         return (
@@ -100,7 +94,7 @@ const Wishlist = ({navigation}) => {
                 <Text style={{
                     color: "#a3a3a3",
                     fontSize: ScreenRatio_iPhone(24)
-                }}>{wishlistIds.length} items</Text>
+                }}>{wishlist.length} items</Text>
             </SafeAreaView>
         )
     }
@@ -117,24 +111,20 @@ const Wishlist = ({navigation}) => {
         />
     )
 
-    if(loading) {
-        return <View></View>
-    } else {
-        return (
-            <View>
-                {renderHeader()}
-                <View style={{marginVertical: ScreenRatio_iPhone(64)}}>
-                    {renderTitle()}
-                    <FlatList
-                        data={products}
-                        renderItem={renderWishlistItem}
-                        keyExtractor={item => item.objectID}
-                        style={{marginTop: ScreenRatio_iPhone(20), height: "100%"}}
-                    />
-                </View>
+    return (
+        <View>
+            {renderHeader()}
+            <View style={{marginVertical: ScreenRatio_iPhone(64)}}>
+                {renderTitle()}
+                <FlatList
+                    data={products}
+                    renderItem={renderWishlistItem}
+                    keyExtractor={item => item.objectID}
+                    style={{marginTop: ScreenRatio_iPhone(20), height: "100%"}}
+                />
             </View>
-        )
-    }
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({

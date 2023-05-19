@@ -62,7 +62,12 @@ const HomeScreen = ({navigation}) => {
             }
 
             if(response != null) {
-                response.forEach(doc => result.push(doc.data()))
+                response.forEach(doc => {
+                    result.push(doc.data())
+                    // Append id property after appending the queried shoe itself
+                    // as Firestore by default doesn't include id in returned document
+                    result[result.length - 1].id = doc.id
+                })
                 fetchProds(result)
             }
 

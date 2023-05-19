@@ -22,9 +22,7 @@ const ProductCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDisco
             const response = await FirebaseServices.getWishlist(uid).get()
 
             if(response.exists) {
-                if(response.data().hasOwnProperty("products")) {
-                    setWishlist(response.data().products)
-                }
+                setWishlist(response.data().shoes)
             }
         } catch(err) {
             console.error(err)

@@ -38,31 +38,31 @@ export const getShoe = (shoeID) => {
 }
 
 export const getShoesByID = (shoeIDArr) => {
-    return db.collection("shoes").where("id", "in", shoeIDArr).get()
+    return db.collection('shoes').where(firebase.firestore.FieldPath.documentId(), 'in', shoeIDArr).get()
 }
 
 export const getWishlist = (uid) => {
     return db.collection("wishlist").doc(uid)
 }
 
-export const addToShoeWishlist = async (uid, prodRef) => {
+export const addToShoeWishlist = async (uid, prodID) => {
     const response = await getWishlist(uid)
 
     try {
         response.update({
-            shoes: firebase.firestore.FieldValue.arrayUnion(db.doc(`shoes/${prodRef}`))
+            shoes: firebase.firestore.FieldValue.arrayUnion(prodID)
         });
     } catch(err) {
         console.error(err)
     }
 }
 
-export const removeShoeFromWishlist = async (uid, prodRef) => {
+export const removeShoeFromWishlist = async (uid, prodID) => {
     const response = await getWishlist(uid)
 
     try {
         response.update({
-            shoes: firebase.firestore.FieldValue.arrayRemove(db.doc(`shoes/${prodRef}`))
+            shoes: firebase.firestore.FieldValue.arrayRemove(prodID)
         });
     } catch(err) {
         console.error(err)
