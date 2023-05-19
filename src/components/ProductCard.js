@@ -30,10 +30,10 @@ const ProductCard = ({ product, wishlist, isLiked, onLikeUnlike }) => {
     try {
       const response = await FirebaseServices.getWishlist(uid).get();
       if (response.exists) {
-        // Update the isLiked state if the product.id is present in the wishlist
         const wishlist = response.data().shoes;
-        if (wishlist.includes(product.id)) {
-          onLikeUnlike(product.id, true);
+        const isCurrentlyLiked = wishlist.includes(product.id);
+        if (isLiked !== isCurrentlyLiked) { // Only update if the current state differs
+          onLikeUnlike(product, isCurrentlyLiked);
         }
       }
     } catch (err) {

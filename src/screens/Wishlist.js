@@ -29,12 +29,7 @@ const fetchWishlistAndProds = async (uid) => {
                 productsData.push(productData);
             });
             setProducts(productsData);
-          } else {
-            setProducts([]);
           }
-      } else {
-          setWishlist([]);
-          setProducts([]);
       }
     } catch(err) {
       console.error(err);
@@ -53,23 +48,23 @@ useEffect(() => {
 }, [navigation]);
 
 const handleLikeUnlike = async (product, isLiked) => {
-    const uid = FirebaseServices.getUserID();
+  const uid = FirebaseServices.getUserID();
 
-    try {
-      if (isLiked) {
-        await FirebaseServices.addToShoeWishlist(uid, product.id);
+  try {
+    if (isLiked) {
+      await FirebaseServices.addToShoeWishlist(uid, product.id);
 
-        setWishlist([...wishlist, product.id]);
-        setProducts([...products, products.push(product)])
-      } else {
-        await FirebaseServices.removeShoeFromWishlist(uid, product.id);
-        
-        setWishlist(wishlist.filter((e) => e !== product.id));
-        setProducts(products.filter((e) => e.id !== product.id))
-      }
-    } catch (err) {
-      console.error(err);
+      setWishlist([...wishlist, product.id]);
+      setProducts([...products, product]); // Push the product directly
+    } else {
+      await FirebaseServices.removeShoeFromWishlist(uid, product.id);
+
+      setWishlist(wishlist.filter((e) => e !== product.id));
+      setProducts(products.filter((e) => e.id !== product.id)); // Filter out the item by its id
     }
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const renderHeader = () => {
@@ -110,7 +105,7 @@ const renderTitle = () => {
           <Text style={{
               color: "#a3a3a3",
               fontSize: ScreenRatio_iPhone(24)
-          }}>{products.length} items</Text>
+          }}>{wishlist.length} items</Text>
       </SafeAreaView>
     )
 }
@@ -121,7 +116,7 @@ const renderWishlistItem = ({item}) => (
       wishlist={wishlist}
       isLiked={wishlist.includes(item.id)}
       onLikeUnlike={handleLikeUnlike}
-      key={item.objectID}
+      key={item.id}
     />
 );
 
@@ -131,10 +126,9 @@ return (
       <View style={{ marginVertical: ScreenRatio_iPhone(64) }}>
         {renderTitle()}
         <FlatList
-        data={products}
-        renderItem={renderWishlistItem}
-        keyExtractor={(item) => item.objectID}
-        style={{ marginTop: ScreenRatio_iPhone(20), height: "100%" }}
+          data={products}
+          renderItem={renderWishlistItem}
+          style={{ marginTop: ScreenRatio_iPhone(20), height: "100%" }}
         />
       </View>
     </View>
