@@ -113,7 +113,6 @@ const renderTitle = () => {
 const renderWishlistItem = ({item}) => (
     <ProductCard
       product={item}
-      wishlist={wishlist}
       isLiked={wishlist.includes(item.id)}
       onLikeUnlike={handleLikeUnlike}
       key={item.id}

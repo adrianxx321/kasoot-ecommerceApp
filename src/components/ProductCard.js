@@ -11,7 +11,7 @@ const formatter = Intl.NumberFormat('en-UK', {
   currency: "MYR"
 });
 
-const ProductCard = ({ product, wishlist, isLiked, onLikeUnlike }) => {
+const ProductCard = ({ product, isLiked, onLikeUnlike }) => {
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -103,11 +103,7 @@ const ProductCard = ({ product, wishlist, isLiked, onLikeUnlike }) => {
         <View style={{ marginEnd: ScreenRatio_iPhone(16), justifyContent: "center" }}>
           <TouchableOpacity onPress={handleLikeUnlike}>
             <Image
-              source={
-                isLiked && wishlist.length > 0
-                  ? require("../../assets/icons/wishlist-selected.png")
-                  : require("../../assets/icons/wishlist.png")
-              }
+              source={ isLiked ? require("../../assets/icons/wishlist-selected.png") : require("../../assets/icons/wishlist.png") }
               style={{
                 width: ScreenRatio_iPhone(24),
                 height: ScreenRatio_iPhone(24),
