@@ -106,88 +106,98 @@ const HomeScreen = ({navigation}) => {
         }
 
         return (
-            <SafeAreaView>
-                <SafeAreaView
-                    style={{
-                        zIndex: 1,
-                        marginStart: ScreenRatio_iPhone(15),
-                        marginVertical: ScreenRatio_iPhone(25),
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        position: "absolute",
-                        left: 0,
-                        right: 0,
-                    }}>
-                    <TouchableOpacity
-                        onPress={() => {
-                                navigation.navigate("Profile Screen")
-                        }}
-                        style={{
-                            marginStart: ScreenRatio_iPhone(15)
-                        }}>
-                        <Image
-                            source={require("../../assets/icons/profile.png")}
-                            resizeMode="contain"
-                            style={styles.headerButtons}
-                        />
-                    </TouchableOpacity>
-
-                    {/* KASOOT LOGO - middle of header */}
-                    <Image
-                            source={require("../../assets/icons/kasoot_logo.png")}
-                            resizeMode="contain"
-                            style={{width: ScreenRatio_General(110), height: ScreenRatio_General(42)}}
-                    />
-
-                    <View style={{flexDirection: "row"}}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                navigation.navigate("Search Screen")
-                            }}>
-                            <Image
-                                source={require("../../assets/icons/search.png")}
-                                resizeMode="contain"
-                                style={[styles.headerButtons, {
-                                    marginEnd: ScreenRatio_iPhone(25)
-                                }]}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {navigation.navigate("My Bag")}}>
-                            <View style={{
-                                backgroundColor: "black",
-                                paddingEnd: ScreenRatio_iPhone(20),
-                                paddingStart: ScreenRatio_iPhone(15),
-                                paddingVertical: ScreenRatio_iPhone(10),
-                                justifyContent: "center",
-                                borderTopLeftRadius: ScreenRatio_iPhone(30),
-                                borderBottomLeftRadius: ScreenRatio_iPhone(30),
-                                bottom: 10,
-                            }}>
-                                <Image
-                                    source={require("../../assets/icons/bag.png")}
-                                    resizeMode="contain"
-                                    style={{
-                                        width: ScreenRatio_iPhone(30),
-                                        height: ScreenRatio_iPhone(30),
-                                        tintColor: "white"
-                                    }}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </SafeAreaView>
-                <FlatList
-                    horizontal={true}
-                    data={shoeCategories}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    contentContainerStyle={{
-                        marginTop: ScreenRatio_iPhone(96),
-                        marginHorizontal: ScreenRatio_iPhone(15)
-                    }}
+          <SafeAreaView>
+            <SafeAreaView
+              style={{
+                zIndex: 1,
+                marginStart: ScreenRatio_iPhone(15),
+                marginVertical: ScreenRatio_iPhone(25),
+                flexDirection: "row",
+                justifyContent: "space-between",
+                position: "absolute"
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Profile Screen");
+                }}
+                style={{
+                  flex: 1 / 3,
+                  marginStart: ScreenRatio_iPhone(15),
+                }}
+              >
+                <Image
+                  source={require("../../assets/icons/profile.png")}
+                  resizeMode="contain"
+                  style={styles.headerButtons}
                 />
+              </TouchableOpacity>
+
+              {/* KASOOT LOGO - middle of header */}
+              <View style={{ flex: 1 / 3 }}>
+                <Image
+                  source={require("../../assets/icons/kasoot_logo.png")}
+                  resizeMode="contain"
+                  style={{
+                    width: ScreenRatio_General(130),
+                    height: ScreenRatio_General(50),
+                    bottom: ScreenRatio_General(5)
+                  }}
+                />
+              </View>
+
+              <View style={{ flex: 1 / 3, flexDirection: "row", justifyContent: "flex-end" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("Search Screen");
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/icons/search.png")}
+                    resizeMode="contain"
+                    style={[
+                      styles.headerButtons,
+                      {
+                        marginEnd: ScreenRatio_iPhone(25),
+                      },
+                    ]}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { navigation.navigate("My Bag"); }}>
+                  <View style={{
+                    backgroundColor: "black",
+                    paddingEnd: ScreenRatio_iPhone(20),
+                    paddingStart: ScreenRatio_iPhone(15),
+                    paddingVertical: ScreenRatio_iPhone(10),
+                    justifyContent: "center",
+                    borderTopLeftRadius: ScreenRatio_iPhone(30),
+                    borderBottomLeftRadius: ScreenRatio_iPhone(30),
+                    bottom: 10,
+                  }}>
+                    <Image
+                      source={require("../../assets/icons/bag.png")}
+                      resizeMode="contain"
+                      style={{
+                        width: ScreenRatio_iPhone(30),
+                        height: ScreenRatio_iPhone(30),
+                        tintColor: "white",
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
             </SafeAreaView>
+            <FlatList
+                horizontal={true}
+                data={shoeCategories}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={{
+                    marginTop: ScreenRatio_iPhone(96),
+                    marginHorizontal: ScreenRatio_iPhone(15)
+                }}
+            />
+          </SafeAreaView>
         )
     }
 
