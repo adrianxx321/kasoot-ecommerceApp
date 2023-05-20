@@ -13,8 +13,25 @@ const SearchScreen = ({navigation}) => {
 
     useEffect( () => {
         readSearchHistory();
-    }, []);
+    }, [navigation]);
 
+   const handleSearch = async () => {
+    if (search.length > 0) {
+      const updatedList = [
+        {
+          id: searchHistoryList.length.toString(),
+          phrase: search
+        },
+        ...searchHistoryList
+      ];
+      setSearchHistoryList(updatedList);
+      await updateSearchHistory(updatedList);
+      
+      navigation.navigate("Search Products", {
+        passedSearchTerm: search
+      });
+    }
+   }
 
    const updateSearchHistory = async (searchHistoryList) => {
         try {
@@ -107,21 +124,7 @@ const SearchScreen = ({navigation}) => {
               onChangeText={(input) => setSearch(input)}
               style={styles.searchInput}
               value={search}
-              onSubmitEditing={() => {
-                if (search.length > 0) {
-                  setSearchHistoryList((searchHistoryList) => [
-                    {
-                      id: searchHistoryList.length.toString(),
-                      phrase: search
-                    },
-                    ...searchHistoryList
-                  ]);
-                  updateSearchHistory(searchHistoryList);
-                  navigation.navigate("Search Products", {
-                    passedSearchTerm: search
-                  });
-                }
-              }}
+              onSubmitEditing={handleSearch}
             />
             {search !== "" && (
               <TouchableWithoutFeedback onPress={() => setSearch("")}>
@@ -139,21 +142,7 @@ const SearchScreen = ({navigation}) => {
 
           {/* Search Button */}
           <TouchableOpacity
-            onPress={() => {
-              if (search.length > 0) {
-                setSearchHistoryList((searchHistoryList) => [
-                  {
-                    id: searchHistoryList.length.toString(),
-                    phrase: search
-                  },
-                  ...searchHistoryList
-                ]);
-                updateSearchHistory(searchHistoryList);
-                navigation.navigate("Search Products", {
-                  passedSearchTerm: search
-                });
-              }
-            }}
+            onPress={handleSearch}
           >
             <Text
               style={{
