@@ -122,12 +122,12 @@ const renderWishlistItem = ({item}) => (
 return (
     <View style={{ height: '90%' }}>
       {renderHeader()}
-      <View style={{ marginVertical: ScreenRatio_iPhone(64) }}>
+      <View style={{marginVertical: ScreenRatio_iPhone(64)}}>
         {renderTitle()}
         <FlatList
           data={products}
           renderItem={renderWishlistItem}
-          style={{ marginTop: ScreenRatio_iPhone(20) }}
+          showsVerticalScrollIndicator={false}
         />
       </View>
     </View>

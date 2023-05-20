@@ -173,6 +173,7 @@ const SearchProductsScreen = ({route, navigation}) => {
                     renderItem={renderProductCard}
                     keyExtractor={(item) => {item.id}}
                     style={{marginTop: ScreenRatio_iPhone(20), height: "100%"}}
+                    showsVerticalScrollIndicator={false}
                 />
             </View>
         </View>

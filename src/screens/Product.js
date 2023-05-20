@@ -369,7 +369,7 @@ const Product = ({route, navigation}) => {
         return (
             <View>
                 {renderHeader()}
-                <ScrollView style={{height: "100%"}}>
+                <ScrollView style={{height: "100%"}} showsVerticalScrollIndicator={false}>
                     {renderShoeImages()}
                     {renderShoeInfo()}
                 </ScrollView>

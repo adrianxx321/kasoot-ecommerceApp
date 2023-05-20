@@ -91,7 +91,7 @@ const HomeScreen = ({navigation}) => {
 
 
     const renderHeader = () => {
-        const renderItem = ({ item }) => {
+        const renderCategories = ({ item }) => {
             const color = item.id === catID ? "#000000" : "#c2c2c2"
             const borderBottomWidth = item.id ===  catID ? ScreenRatio_iPhone(2) : 0
             
@@ -189,8 +189,9 @@ const HomeScreen = ({navigation}) => {
             </SafeAreaView>
             <FlatList
                 horizontal={true}
+                showsHorizontalScrollIndicator={false}
                 data={shoeCategories}
-                renderItem={renderItem}
+                renderItem={renderCategories}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={{
                     marginTop: ScreenRatio_iPhone(96),
@@ -216,6 +217,7 @@ const HomeScreen = ({navigation}) => {
                 renderItem={renderProducts}
                 keyExtractor={item => `${item.id}`}
                 contentContainerStyle={{flexGrow: 1}}
+                showsVerticalScrollIndicator={false}
                 style={{marginTop: ScreenRatio_iPhone(20), marginBottom: ScreenRatio_iPhone(196)}}
             />
         </View>

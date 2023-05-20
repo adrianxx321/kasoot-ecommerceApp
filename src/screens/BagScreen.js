@@ -144,6 +144,7 @@ const BagScreen = ({navigation}) => {
                 keyExtractor={item => `${item.prodID}-${item.size}${item.sizeType}`}
                 contentContainerStyle={{flexGrow: 1}}
                 style={{marginTop: ScreenRatio_iPhone(20), marginBottom: ScreenRatio_iPhone(196)}}
+                showsVerticalScrollIndicator={false}
             />
             {renderFooter()}
         </SafeAreaView>
