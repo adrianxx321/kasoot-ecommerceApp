@@ -163,7 +163,7 @@ const Product = ({route, navigation}) => {
                     <Text style={{
                         fontSize: ScreenRatio_iPhone(18),
                         color: "#c2c2c2"
-                    }}>{product.prodCat}</Text>
+                    }}>{product.prodGend} {product.prodCat}</Text>
                 </View>
                 {/* Shoe name & price... */}
                 <View style={styles.prodInfoAlignment}>

@@ -13,7 +13,7 @@ const formatter = Intl.NumberFormat('en-UK', {
     currency: "MYR"
 })
 
-const DashboardProdCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, prodDiscount, prodCat, prodGender}) => {
+const DashboardProdCard = ({product}) => {
     const navigation = useNavigation()
     const [wishlist, setWishlist] = useState([])
     
@@ -43,7 +43,7 @@ const DashboardProdCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, pro
     return (
         <TouchableWithoutFeedback
             onPress={() => {
-                navigation.navigate("Product", {shoeID: prodID})
+                navigation.navigate("Product", {shoeID: product.id})
             }}>
             <View
                 style={{
@@ -61,7 +61,7 @@ const DashboardProdCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, pro
                         marginTop: ScreenRatio_iPhone(15),
                     }}>
                     <Image 
-                        source={{uri: prodImg}}
+                        source={{uri: product.prodImg[0]}}
                         style={{
                             width: ScreenRatio_iPhone(224),
                             height: ScreenRatio_iPhone(224),
@@ -72,23 +72,23 @@ const DashboardProdCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, pro
                     <View style={{justifyContent: "center", left: ScreenRatio_iPhone(15)}}>
                         <TouchableOpacity
                             onPress={() => {
-                                if (wishlist.includes(prodID)) {
+                                if (wishlist.includes(product.id)) {
                                     // remove
-                                    setWishlist(wishlist.filter((e)=>(e !== prodID)))
-                                    FirebaseServices.removeProdFromWishlist(FirebaseServices.getUserID(), prodID)
+                                    setWishlist(wishlist.filter((e)=>(e !== product.id)))
+                                    FirebaseServices.removeProdFromWishlist(FirebaseServices.getUserID(), product.id)
                                 }
                                 else {
                                     // add
-                                    setWishlist([...wishlist, prodID])
-                                    FirebaseServices.addProdToWishlist(FirebaseServices.getUserID(), prodID)
+                                    setWishlist([...wishlist, product.id])
+                                    FirebaseServices.addProdToWishlist(FirebaseServices.getUserID(), product.id)
                                 }
                             }}>
                             <Image 
-                                source={(wishlist.includes(prodID) && wishlist.length > 0) ? require("../../assets/icons/wishlist-selected.png") : require("../../assets/icons/wishlist.png")}
+                                source={(wishlist.includes(product.id) && wishlist.length > 0) ? require("../../assets/icons/wishlist-selected.png") : require("../../assets/icons/wishlist.png")}
                                 style={{
                                     width: ScreenRatio_iPhone(32),
                                     height: ScreenRatio_iPhone(32),
-                                    tintColor: (wishlist.includes(prodID)) ? "#e30022" : "#000000",
+                                    tintColor: (wishlist.includes(product.id)) ? "#e30022" : "#000000",
                                 }}
                             />
                         </TouchableOpacity>
@@ -100,16 +100,16 @@ const DashboardProdCard = ({prodID, prodImg, prodBrand, prodName, prodPrice, pro
                     marginVertical: ScreenRatio_iPhone(20),
                 }}>
                     <Text style={[styles.cardText, {fontWeight: "bold", lineHeight: ScreenRatio_iPhone(22)}]}>
-                        {prodBrand} {prodName}
+                        {product.prodBrand} {product.prodName}
                     </Text>
                     <Text style={[styles.cardText, {fontSize: ScreenRatio_iPhone(18), color: "#c2c2c2", lineHeight: ScreenRatio_iPhone(44)}]}>
-                        {prodGender}'s {prodCat}
+                        {product.prodGend} {product.prodCat}
                     </Text>
-                    <Text style={[styles.cardText, {textDecorationLine: (prodDiscount) ? "line-through" : "none"}]}>
-                        {formatter.format(prodPrice)}
+                    <Text style={[styles.cardText, {textDecorationLine: (product.prodDiscount) ? "line-through" : "none"}]}>
+                        {formatter.format(product.prodPrice)}
                     </Text>
-                    <Text style={[styles.cardText, {display: (prodDiscount) ? "flex" : "none", fontWeight: "bold", color: "#de651d"}]}>
-                        {formatter.format(prodPrice * (1 - prodDiscount / 100))}
+                    <Text style={[styles.cardText, {display: (product.prodDiscount) ? "flex" : "none", fontWeight: "bold", color: "#de651d"}]}>
+                        {formatter.format(product.prodPrice * (1 - product.prodDiscount / 100))}
                     </Text>
                 </View>
             </View>

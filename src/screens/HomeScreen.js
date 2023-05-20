@@ -193,14 +193,7 @@ const HomeScreen = ({navigation}) => {
 
     const renderProducts = ({item}) => (
         <DashboardProdCard
-            prodID={item.id}
-            prodImg={item.prodImg[0]}
-            prodBrand={item.prodBrand}
-            prodName={item.prodName}
-            prodPrice={item.prodPrice}
-            prodDiscount={item.prodDiscount}
-            prodCat={item.prodCat}
-            prodGender={item.prodGender}
+            product={item}
             key={item.id}
         />
     )
