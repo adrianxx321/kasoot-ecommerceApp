@@ -105,7 +105,7 @@ const renderTitle = () => {
           <Text style={{
               color: "#a3a3a3",
               fontSize: ScreenRatio_iPhone(24)
-          }}>{wishlist.length} items</Text>
+          }}>{wishlist.length} item{wishlist.length > 1 ? 's' : ''}</Text>
       </SafeAreaView>
     )
 }

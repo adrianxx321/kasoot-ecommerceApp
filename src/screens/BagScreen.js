@@ -80,7 +80,7 @@ const BagScreen = ({navigation}) => {
                 <Text style={{
                     color: "#a3a3a3",
                     fontSize: ScreenRatio_iPhone(24)
-                }}>{cartItems.length} items</Text>
+                }}>{cartItems.length} item{cartItems.length > 1 ? 's' : ''}</Text>
             </View>
         )
     }
