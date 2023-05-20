@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
+import * as FirebaseServices from "../services/firestore";
 import * as algolia from "../services/algolia"
 import ProductCard from "../components/ProductCard"
 
@@ -11,29 +12,73 @@ import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 const SearchProductsScreen = ({route, navigation}) => {
     const {passedSearchTerm} = route.params
     const [products, fetchProducts] = useState([])
+    const [wishlist, fetchWishlist] = useState([])
 
-    const queryProducts = async() => {
+    const queryProducts = async () => {
         try {
-            const response = await algolia.getShoesQuery(passedSearchTerm)
+            const response = await algolia.searchProducts(passedSearchTerm)
 
             if(response.length > 0) {
-                fetchProducts(response)
+              var result = []
+              const dbResponse = await FirebaseServices.getProdsByID(response.map((hit) => hit.objectID))
+
+              if(!dbResponse.empty) {
+                result = dbResponse.docs.map((doc) => {
+                  var temp = doc.data()
+                  temp.id = doc.id
+
+                  return temp
+                })
+
+                fetchProducts(result)
+              }
             }
         } catch(err) {
             console.error(err)
         }
     }
 
+    const queryWishlist = async (uid) => {
+      try {
+        const response = await FirebaseServices.getWishlist(uid).get()
+
+        if(response.exists) {
+          fetchWishlist(response.data().products)
+        }
+      }
+      catch(err) {
+        console.error(err)
+      }
+    }
+
     useEffect(() => {
-        const unsubscribe = navigation.addListener("focus", () => {
-            queryProducts()
-        })
+      const uid = FirebaseServices.getUserID()
+      const unsubscribe = navigation.addListener("focus", () => {
+          queryProducts()
+          queryWishlist(uid)
+      })
 
-        // Fetch products (not from Firebase)
-        queryProducts()
+      queryProducts()
+      queryWishlist(uid)
 
-        return unsubscribe
+      return unsubscribe
     }, [navigation])
+
+    const handleLikeUnlike = async (product, isLiked) => {
+      const uid = FirebaseServices.getUserID();
+    
+      try {
+        if(isLiked) {
+          await FirebaseServices.addProdToWishlist(uid, product.id);
+          fetchWishlist([...wishlist, product.id]);
+        } else {
+          await FirebaseServices.removeProdFromWishlist(uid, product.id);
+          fetchWishlist(wishlist.filter((e) => e !== product.id));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
     
     // Back and cart buttons ...
     const renderHeader = () => {
@@ -111,13 +156,10 @@ const SearchProductsScreen = ({route, navigation}) => {
 
     const renderProductCard = ({item}) => (
         <ProductCard
-            prodID={item.objectID}
-            prodImg={item.prodImg[0]}
-            prodBrand={item.prodBrand}
-            prodName={item.prodName}
-            prodPrice={item.prodPrice}
-            prodDiscount={item.prodDiscount}
-            key={item.objectID}
+            product={item}
+            isLiked={wishlist.includes(item.id)}
+            onLikeUnlike={handleLikeUnlike}
+            key={item.id}
         />
     )
 
@@ -129,7 +171,7 @@ const SearchProductsScreen = ({route, navigation}) => {
                 <FlatList
                     data={products}
                     renderItem={renderProductCard}
-                    keyExtractor={item => item.objectID}
+                    keyExtractor={(item) => {item.id}}
                     style={{marginTop: ScreenRatio_iPhone(20), height: "100%"}}
                 />
             </View>
