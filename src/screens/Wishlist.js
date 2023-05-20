@@ -120,18 +120,18 @@ const renderWishlistItem = ({item}) => (
 );
 
 return (
-    <View>
+    <View style={{ height: '90%' }}>
       {renderHeader()}
       <View style={{ marginVertical: ScreenRatio_iPhone(64) }}>
         {renderTitle()}
         <FlatList
           data={products}
           renderItem={renderWishlistItem}
-          style={{ marginTop: ScreenRatio_iPhone(20), height: "100%" }}
+          style={{ marginTop: ScreenRatio_iPhone(20) }}
         />
       </View>
     </View>
-);
+  );
 };
 
 const styles = StyleSheet.create({
