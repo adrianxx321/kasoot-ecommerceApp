@@ -64,9 +64,7 @@ const Product = ({route, navigation}) => {
             const response = await FirebaseServices.getCart(uid).get()
 
             if(response.exists) {
-                if(response.data().hasOwnProperty("cart")) {
-                    setCart(response.data().cart)
-                }
+              setCart(response.data().items)
             }
         } catch(err) {
             console.error(err)
@@ -301,7 +299,7 @@ const Product = ({route, navigation}) => {
                         disabled={(selectedSize == null) ? true : false}
                         onPress={() => {
                             const index = cart.findIndex(item => {
-                                return (item.prodID == shoeID && item.size == selectedSize)
+                                return (item.id == shoeID && item.size == selectedSize)
                             })
                             let newCart = cart
 
@@ -315,14 +313,16 @@ const Product = ({route, navigation}) => {
                             else {
                                 // Add new cart item to dataabse
                                 newCart.push({
-                                    prodID: shoeID,
+                                    id: product.id,
                                     quantity: 1,
                                     size: selectedSize,
+                                    // REMOVE START
                                     prodImg: product.prodImg,
                                     prodBrand: product.prodBrand,
                                     prodName: product.prodName,
                                     prodPrice: product.prodPrice,
                                     prodDiscount: product.prodDiscount,
+                                    // REMOVE END
                                     sizeType: product.sizeType
                                 })
                                 

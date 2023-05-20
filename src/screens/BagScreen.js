@@ -22,9 +22,7 @@ const BagScreen = ({navigation}) => {
             const response = await FirebaseServices.getCart(uid).get()
 
             if(response.exists) {
-                if(response.data().hasOwnProperty("cart")) {
-                    fetchCartItems(response.data().cart)
-                }
+              fetchCartItems(response.data().items)
             }
         } catch(err) {
             console.error(err)

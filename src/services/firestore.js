@@ -78,7 +78,7 @@ export const addToCart = async (uid, newCart) => {
 
     try {
         response.update({
-            cart: firebase.firestore.FieldValue.arrayUnion(newCart)
+            items: firebase.firestore.FieldValue.arrayUnion(newCart)
         })
     } catch(err) {
         console.error(err)
@@ -90,7 +90,7 @@ export const addToCartDup = async (uid, newCart) => {
 
     try {
         response.set({
-            cart: newCart
+            items: newCart
         })
     } catch(err) {
         console.error(err)
@@ -98,8 +98,8 @@ export const addToCartDup = async (uid, newCart) => {
 }
 
 export const deleteCart = async (uid) => {
-    await db.collection("cart").doc(uid).update({
-        cart: firebase.firestore.FieldValue.delete()
+    await db.collection("items").doc(uid).update({
+        items: firebase.firestore.FieldValue.delete()
     })
 }
 
@@ -128,8 +128,8 @@ export async function signUp (email, password) {
                 console.log(user)   //Log USER obj to console
 
                 // Create a new cart document for the new user
-                db.collection("cart").doc(user.user.uid).set({
-                    cart: []
+                db.collection("items").doc(user.user.uid).set({
+                    items: []
                 })
 
                 // Create a new wishlist document for the new user
