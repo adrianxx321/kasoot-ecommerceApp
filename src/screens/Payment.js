@@ -1,11 +1,13 @@
-import React, { useState, useEffect, Component } from "react"
-import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Alert, FlatList, ScrollView } from "react-native"
+import React, { useState } from "react"
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, FlatList, ScrollView, TouchableWithoutFeedback, Alert } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import Toast from "react-native-toast-message"
+import CheckoutItemCard from "../components/CheckoutItemCard"
+import BankCardInput from "../components/BankCardInput"
 
 import 'intl'
 import 'intl/locale-data/jsonp/en'
 import { ScreenRatio_General } from "../components/ScreenRatio-General"
+import { ScreenRatio_iPhone } from "../components/ScreenRatio-iPhone"
 
 import * as FirebaseServices from "../services/firestore"
 
@@ -18,609 +20,338 @@ const formatter = Intl.NumberFormat('en-UK', {
 const PaymentType = [
     {
         id: "1",
-        title: "Bank Card"
+        title: "Credit/Debit Card",
+        icon:require( "../../assets/icons/card.png")
     },
     {
         id: "2",
-        title: "Touch n Go"
+        title: "Touch n Go",
+        icon: require("../../assets/icons/tng.png")
     },
     {
         id: "3",
-        title: "Boost"
+        title: "Boost",
+        icon: require("../../assets/icons/boost.png")
     }
 ];
 
-const FlatListItem = ({ item, onPress, backgroundColor, textColor, borderColor }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor, borderColor]}>
-        <Text style={[textColor]}>{item.title}</Text>
-    </TouchableOpacity>
-);
-
 const Payment = ({route, navigation}) => {
-
-    const {amount} = route.params
-
-    const [selectedId, setSelectedId] = useState('');
-
-    const [cardName, setcardName] = useState('');
-    const [cardNumber, setcardNumber] = useState('');
-    const [cardMonth, setcardMonth] = useState('');
-    const [cardYear, setcardYear] = useState('');
-    const [cardCVV, setcardCVV] = useState('');
+    const {amount, cartItems} = route.params
+    const [selectedMethod, setSelectedMethod] = useState('');
+    const phoneNumRegex = /^01[0-9]-\d{7}$/;
+    const [cardInfo, setCardInfo] = useState(null);
     const [TnGPhoneNo, setTnGPhoneNo] = useState('');
     const [BoostPhoneNo, setBoostPhoneNo] = useState('');
 
+    const orderCompleted = async ({payment_method}) => {
+      Alert.alert(
+        "Payment Successful",
+        "Your order has been placed!",
+        [
+            {
+              text: "OK",
+              onPress: () => {
+                console.log("AlertBox: PAYMENT SUCCESSFUL")
+              }
+            }
+        ],
+        {cancelable: true}
+      )
+
+      await FirebaseServices.deleteCart(FirebaseServices.getUserID())
+    }
+
     const renderHeader = () => {
-        return (
-            <SafeAreaView
-                style={{
-                    zIndex: 3,
-                    marginHorizontal: ScreenRatio_General(15),
-                    marginVertical: ScreenRatio_General(15),
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    position: "absolute",
-                    left: 0,
-                    right: 0
-                }}>
-                <TouchableOpacity
-                    onPress={() => navigation.goBack()}>
-                    <Image
-                        source={require("../../assets/icons/back.png")}
-                        resizeMode="contain"
-                        style={styles.headerButtons}
-                    />
-                </TouchableOpacity>
-            </SafeAreaView>
-        )
+      return (
+        <View style={styles.headerText}>
+          <TouchableOpacity
+              onPress={() => navigation.goBack()}>
+              <Image
+                  source={require("../../assets/icons/back.png")}
+                  resizeMode="contain"
+                  style={{
+                      width: ScreenRatio_iPhone(30),
+                      height: ScreenRatio_iPhone(30)
+                  }}
+              />
+          </TouchableOpacity>
+          {/* Future Purchase T&C Screen */}
+          <TouchableWithoutFeedback onPress={() => {}}>
+              <Text style={{
+                  color: "#a3a3a3",
+                  fontSize: ScreenRatio_iPhone(20),
+                  textDecorationLine: "underline"
+              }}>Terms & Conditions</Text>
+          </TouchableWithoutFeedback>
+        </View>
+      )
     }
 
     const renderTitle = () => {
-        return (
-            <SafeAreaView>               
-                <Text
-                    style={{
-                        fontSize: ScreenRatio_General(35),
-                        textAlign: 'center',
-                        marginTop: ScreenRatio_General(40),
-                        marginHorizontal: ScreenRatio_General(30),
-                        color: "#de651d",
-                        fontWeight: "bold",
-                    }}>
-                        Confirm Order and Pay
-                </Text>
-            </SafeAreaView>
-        )
-    }
-
-    const renderDescription = () => {
-        return (
-            <SafeAreaView>               
-                <Text
-                    style={{
-                        fontSize: ScreenRatio_General(20),
-                        textAlign: 'justify',
-                        marginHorizontal: ScreenRatio_General(60),
-                        color: "#000000",
-                    }}>
-                        Please make payment with the amount stated below, and confirm to place the purchase order.
-                </Text>
-            </SafeAreaView>
-        )
-    }
-
-    const renderPaymentBox = () => {
-        return (
-            <SafeAreaView
-                style={{
-                    backgroundColor: "#de651d",
-                    marginTop: ScreenRatio_General(30),
-                    marginHorizontal: ScreenRatio_General(40),
-                    borderRadius: 7,
-                    borderWidth: 3,
-                    borderColor: "#d4570d",
-                    }}>               
-                    <Text
-                        style={{
-                            fontSize: ScreenRatio_General(22),
-                            textAlign: 'left',
-                            marginTop: ScreenRatio_General(10),
-                            marginHorizontal: ScreenRatio_General(30),
-                            marginBottom: ScreenRatio_General(30),
-                            color: "#ffffff",
-                            fontWeight: "bold",
-                        }}>
-                            Total amount to pay:
-                    </Text>
-
-                    <Text
-                        style={{
-                            fontSize: ScreenRatio_General(40),
-                            textAlign: 'right',
-                            marginHorizontal: ScreenRatio_General(20),
-                            marginTop: ScreenRatio_General(30),
-                            marginBottom: ScreenRatio_General(40),
-                            color: "#ffffff",
-                            fontWeight: "bold",
-                            textDecorationLine: 'underline'
-                        }}>
-                            {formatter.format(amount)}
-                    </Text>
-            </SafeAreaView>
-        )
+      return (
+        <View style={styles.headerText}>
+          <Text style={{
+              fontWeight: "bold",
+              fontSize: ScreenRatio_iPhone(36)
+          }}>Checkout</Text>
+          <Text style={{
+              color: "#a3a3a3",
+              fontSize: ScreenRatio_iPhone(24)
+          }}>{cartItems.length} item{cartItems.length > 1 ? 's' : ''}</Text>
+        </View>
+      )
     }
 
     const renderPaymentFlatList = () => {
         const renderItem = ({ item }) => {
-            const backgroundColor = item.id === selectedId ? "#de651d" : "#c2c2c2";
-            const color = item.id === selectedId ? 'white' : 'black';
-            const borderColor = item.id === selectedId ? "#d4570d" : "#b0b0b0";
+            const backgroundColor = item.id === selectedMethod ? "#de651d" : "#d6d6d6";
+            const color = item.id === selectedMethod ? "#ffffff" : "#93959e";
+
+            const FlatListItem = ({ item, onPress, backgroundColor, textColor }) => (
+              <TouchableOpacity onPress={onPress} style={[styles.paymentOption, backgroundColor]}>
+                <View style={{flexDirection: "row", alignItems: "center", }}>
+                  <Image
+                    source={item.icon}
+                    resizeMode="contain"
+                    style={{
+                      width: ScreenRatio_iPhone(24),
+                      height: ScreenRatio_iPhone(24),
+                      tintColor: selectedMethod === item.id ? "#ffffff" : "#93959e",
+                      marginRight: ScreenRatio_iPhone(8)
+                    }}
+                  />
+                  <Text style={[textColor]}>{item.title}</Text>
+                </View>
+              </TouchableOpacity>
+            );
 
             return (
-            <FlatListItem
+              <FlatListItem
                 item={item}
-                onPress={() => setSelectedId(item.id)}
+                onPress={() => setSelectedMethod(item.id)}
                 backgroundColor={{ backgroundColor }}
                 textColor={{ color }}
-                borderColor={{ borderColor }}
-            />
+              />
             );
         };
 
         return (
-            <SafeAreaView>
-            <Text
-                style={{
-                    fontSize: ScreenRatio_General(22),
-                    textAlign: 'left',
-                    marginVertical: ScreenRatio_General(10),
-                    marginHorizontal: ScreenRatio_General(60),
-                    color: "#000000",
-                    fontWeight: "bold",
-                }}>
-                    PAYMENT METHODS:
-            </Text>
-
-            <FlatList
-                style={{
-                    marginHorizontal: ScreenRatio_General(50),                   
-                }}
-                horizontal
-                data={PaymentType}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                extraData={selectedId}
-            />
-            </SafeAreaView>
+            <View style={{marginBottom: ScreenRatio_iPhone(16)}}>
+              <Text style={[styles.subHeaderText, {marginBottom: ScreenRatio_iPhone(8)}]}>
+                Select a payment method:
+              </Text>
+              <FlatList
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  data={PaymentType}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item.id}
+                  extraData={selectedMethod}
+              />
+            </View>
         );
     };
 
+    // Renders the appropriate payment fields according to selected payment method
+    const renderPaymentSelection = () => {
+      switch (selectedMethod) {
+        case "1":
+          return (
+              renderBankCardInputForm()
+            )
+          case "2":
+            return (
+              renderTouchnGoInputForm()
+            )
+          case "3":
+            return (
+              renderBoostInputForm()
+            )
+          default:
+            return (
+              <View></View>
+            )
+      } 
+    };
+
     const renderBankCardInputForm = () => {
-        return (
-            <SafeAreaView style={{
-                marginHorizontal: ScreenRatio_General(50),
-                flex: 1,
-                height: ScreenRatio_General(400),
-                backgroundColor: "#ffffff",
-                borderRadius: 7, 
-                borderWidth: 3,
-                borderColor: "#c2c2c2",    
-            }}>
-            <Text
-                style={{
-                    fontSize: ScreenRatio_General(22),
-                    textAlign: 'left',
-                    marginTop: ScreenRatio_General(10),
-                    marginHorizontal: ScreenRatio_General(30),
-                    color: "#000000",
-                    fontWeight: "bold",
-                }}>
-                    Card Name:
-            </Text>
-            <TextInput
-                    placeholder="Card Name"
-                    keyboardType="default"
-                    onChangeText={(input) => setcardName(input)}
-                    style={{
-                            flexShrink: 1, 
-                            fontSize: ScreenRatio_General(18),
-                            marginHorizontal: ScreenRatio_General(30),
-                            backgroundColor: "#ffffff",
-                            height: ScreenRatio_General(50),
-                            margin: ScreenRatio_General(15),
-                            borderColor: "#4f4f4f",
-                            borderWidth: 1,                           
-                            borderRadius: 5,
-                            padding: 10,
-                            width: ScreenRatio_General(365), 
-                    }}
-                />
-                <Text
-                style={{
-                    fontSize: ScreenRatio_General(22),
-                    textAlign: 'left',
-                    marginTop: ScreenRatio_General(10),
-                    marginHorizontal: ScreenRatio_General(30),
-                    color: "#000000",
-                    fontWeight: "bold",
-                }}>
-                    Card Details:
-            </Text>
-            <TextInput
-                    placeholder="Card Number"
-                    keyboardType="numeric"
-                    maxLength = {16}
-                    onChangeText={(input) => setcardNumber(input)}
-                    style={{
-                            flexShrink: 1, 
-                            fontSize: ScreenRatio_General(18),
-                            marginHorizontal: ScreenRatio_General(30),
-                            backgroundColor: "#ffffff",
-                            height: ScreenRatio_General(50),
-                            margin: ScreenRatio_General(15),
-                            borderColor: "#4f4f4f",
-                            borderWidth: 1,
-                            borderRadius: 5,
-                            padding: ScreenRatio_General(10),   
-                            width: ScreenRatio_General(365),                        
-                    }}
-                />
-                <View style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    marginBottom:ScreenRatio_General(10),
-                    width: ScreenRatio_General(450),
-                }}>
-            <TextInput
-                    placeholder="MM"
-                    keyboardType="number-pad"
-                    maxLength = {2}
-                    onChangeText={(input) => setcardMonth(input)}
-                    style={{
-                            flexShrink: 1, 
-                            fontSize: ScreenRatio_General(18),
-                            marginLeft: ScreenRatio_General(30),
-                            marginRight: ScreenRatio_General(10),
-                            textAlign: "center", 
-                            backgroundColor: "#ffffff",
-                            height: ScreenRatio_General(50),
-                            margin: ScreenRatio_General(15),
-                            borderColor: "#4f4f4f",
-                            borderWidth: 1,
-                            borderRadius: 5,
-                            padding: 10,
-                            width: ScreenRatio_General(70),
-                    }}
-                />
-                <Text
-                style={{
-                    fontSize: ScreenRatio_General(22),
-                    textAlign: 'left',
-                    marginTop: ScreenRatio_General(25),
-                    color: "#000000",
-                    fontWeight: "bold",
-                }}>
-                    /
-                </Text>
-                <TextInput
-                            placeholder="YY"
-                            keyboardType="number-pad"
-                            maxLength = {2}
-                            onChangeText={(input) => setcardYear(input)}
-                            style={{
-                                    flexShrink: 1, 
-                                    fontSize: ScreenRatio_General(18),
-                                    marginLeft: ScreenRatio_General(10),
-                                    marginRight: ScreenRatio_General(60),
-                                    textAlign: "center", 
-                                    backgroundColor: "#ffffff",
-                                    height: ScreenRatio_General(50),
-                                    margin: ScreenRatio_General(15),
-                                    borderColor: "#4f4f4f",
-                                    borderWidth: 1,
-                                    borderRadius: 5,
-                                    padding: 10,
-                                    width: ScreenRatio_General(70), 
-                            }}
-                        />
-                    <TextInput
-                        placeholder="CVV"
-                        keyboardType="numeric"
-                        
-                        maxLength = {3}
-                        onChangeText={(input) => setcardCVV(input)}
-                        style={{
-                                flexShrink: 1, 
-                                fontSize: ScreenRatio_General(18),
-                                marginHorizontal: ScreenRatio_General(30),
-                                textAlign: "center", 
-                                backgroundColor: "#ffffff",
-                                height: ScreenRatio_General(50),
-                                margin: ScreenRatio_General(15),
-                                borderColor: "#4f4f4f",
-                                borderWidth: 1,
-                                borderRadius: 5,
-                                padding: 10,
-                                width: ScreenRatio_General(100), 
-                        }}
-                    />
-                </View>                
-            </SafeAreaView>
-        )
+      return (
+        <View>
+          <Text style={[styles.subHeaderText, {marginBottom: ScreenRatio_iPhone(8)}]}>Enter your credit/debit card details:</Text>
+          <BankCardInput cardInfo={cardInfo} setCardInfo={setCardInfo}/>
+          <Text style={{marginTop: ScreenRatio_iPhone(12), color: "darkgray"}}>Disclaimer: We won't save your card details for the sake of data security.</Text>
+        </View>
+      )
     }
 
     const renderTouchnGoInputForm = () => {
-        return (
-            <SafeAreaView style={{
-                marginHorizontal: ScreenRatio_General(50),
-                flex: 1,
-                height: ScreenRatio_General(200),
-                backgroundColor: "#ffffff",
-                borderRadius: 7, 
-                borderWidth: 3,
-                borderColor: "#c2c2c2",    
-            }}>
-            <Text
-                style={{
-                    fontSize: ScreenRatio_General(22),
-                    textAlign: 'left',
-                    marginTop: ScreenRatio_General(10),
-                    marginHorizontal: ScreenRatio_General(30),
-                    color: "#000000",
-                    fontWeight: "bold",
-                }}>
-                    Phone Number (Touch n Go):
-            </Text>
+      return (
+        <View>
+          <Text style={[styles.subHeaderText, {marginBottom: ScreenRatio_iPhone(6)}]}>Enter your registered phone number:</Text>
+          <View style={{
+            marginVertical: ScreenRatio_iPhone(6),
+            flexDirection: "row",
+            marginHorizontal: ScreenRatio_iPhone(14)
+          }}>
             <TextInput
-                    placeholder="e.g. 01X-XXX XXXX"
-                    keyboardType="numeric"
-                    onChangeText={(input) => setTnGPhoneNo(input)}
-                    style={{
-                            flexShrink: 1, 
-                            fontSize: ScreenRatio_General(18),
-                            marginHorizontal: ScreenRatio_General(30),
-                            backgroundColor: "#ffffff",
-                            height: ScreenRatio_General(50),
-                            margin: ScreenRatio_General(15),
-                            borderColor: "#4f4f4f",
-                            borderWidth: 1,                           
-                            borderRadius: 5,
-                            padding: 10,
-                            width: ScreenRatio_General(365), 
-                    }}
-                />             
-            </SafeAreaView>
-        )
+              onChangeText={(input) => setTnGPhoneNo(input)}
+              keyboardType="phone-pad"
+              placeholder="012-3456789"
+              placeholderTextColor={"darkgray"}
+              style={{
+                flex: 1,
+                fontSize: ScreenRatio_iPhone(16),
+                color: phoneNumRegex.test(TnGPhoneNo) ? "green" : "red"
+              }}
+            ></TextInput>
+            <Image
+              source={require("../../assets/tng-colored.png")}
+              style={{height: ScreenRatio_iPhone(32), width: ScreenRatio_iPhone(32)}}  
+            />
+          </View>
+          <Text style={{marginTop: ScreenRatio_iPhone(8), color: "darkgray"}}>
+            You will be directed to TnG payment network to proceed for payment.
+          </Text>
+        </View>
+      )
     }
 
     const renderBoostInputForm = () => {
-        return (
-            <SafeAreaView style={{
-                marginHorizontal: ScreenRatio_General(50),
-                flex: 1,
-                height: ScreenRatio_General(200),
-                backgroundColor: "#ffffff",
-                borderRadius: 7, 
-                borderWidth: 3,
-                borderColor: "#c2c2c2",    
-            }}>
-            <Text
-                style={{
-                    fontSize: ScreenRatio_General(22),
-                    textAlign: 'left',
-                    marginTop: ScreenRatio_General(10),
-                    marginHorizontal: ScreenRatio_General(30),
-                    color: "#000000",
-                    fontWeight: "bold",
-                }}>
-                    Phone Number (Boost):
-            </Text>
+      return (
+        <View>
+          <Text style={[styles.subHeaderText, {marginBottom: ScreenRatio_iPhone(6)}]}>Enter your registered phone number:</Text>
+          <View style={{
+            marginVertical: ScreenRatio_iPhone(6),
+            flexDirection: "row",
+            marginHorizontal: ScreenRatio_iPhone(14)
+          }}>
             <TextInput
-                    placeholder="e.g. 01X-XXX XXXX"
-                    keyboardType="numeric"
-                    onChangeText={(input) => setBoostPhoneNo(input)}
-                    style={{
-                            flexShrink: 1, 
-                            fontSize: ScreenRatio_General(18),
-                            marginHorizontal: ScreenRatio_General(30),
-                            backgroundColor: "#ffffff",
-                            height: ScreenRatio_General(50),
-                            margin: ScreenRatio_General(15),
-                            borderColor: "#4f4f4f",
-                            borderWidth: 1,                           
-                            borderRadius: 5,
-                            padding: 10,
-                            width: ScreenRatio_General(365), 
-                    }}
-                />
-            </SafeAreaView>
-        )
+              onChangeText={(input) => setBoostPhoneNo(input)}
+              keyboardType="phone-pad"
+              placeholder="012-3456789"
+              placeholderTextColor={"darkgray"}
+              style={{
+                flex: 1,
+                fontSize: ScreenRatio_iPhone(16),
+                color: phoneNumRegex.test(TnGPhoneNo) ? "green" : "red"
+              }}
+            ></TextInput>
+            <Image
+              source={require("../../assets/boost-colored.png")}
+              style={{height: ScreenRatio_iPhone(32), width: ScreenRatio_iPhone(32)}}  
+            />
+          </View>
+          <Text style={{marginTop: ScreenRatio_iPhone(8), color: "darkgray"}}>
+            You will be directed to Boost™ payment network to proceed for payment.
+          </Text>
+        </View>
+      )
     }
 
-    const renderPaymentSelection = () => {
-        if (selectedId == "1") {
-            return (
-                <View>
-                {renderBankCardInputForm()}
-                </View>
-            )
+    // Total payable and place order button
+    const renderFooter = () => {
+        const canProceed = () => {
+          switch (selectedMethod) {
+            case "1":
+              return cardInfo != null && cardInfo.status.number === "valid" 
+              && cardInfo.status.expiry === "valid" 
+              && cardInfo.status.cvc === "valid";
+            case "2":
+              return phoneNumRegex.test(TnGPhoneNo);
+            case "3":
+              return phoneNumRegex.test(BoostPhoneNo);
+            case '':
+              return false;
+            default:
+              return false;
+          }
         }
-        else if (selectedId == "2") {
-            return (
-                <View>
-                {renderTouchnGoInputForm()}
-                </View>
-            )
-        }
-        else if (selectedId == "3") {
-            return (
-                <View>
-                {renderBoostInputForm()}
-                </View>
-            )
-        }
-        else {
-            return (
-                <View
-                    style={{
-                        marginHorizontal: ScreenRatio_General(50),
-                        flex: 1,
-                        height: ScreenRatio_General(200),
-                }}>
-                </View>
-            )
-        }        
-    };
-
-    const renderPaymentButton = () => {
+        
         return (
-            <SafeAreaView>
-                <TouchableOpacity
-                    disabled={(selectedId == '') ? true : false}
-                    onPress={() => {
-                                if (selectedId == "1") {
-                                    if (cardName != '' && cardNumber != '' && cardMonth != '' && cardYear != '' && cardCVV != ''){  
-                                        Alert.alert(
-                                            "Payment Successful",
-                                            "Payment Method: BANK CARD \n\nYour order has been placed!",
-                                            [
-                                                {
-                                                    text: "OK",
-                                                    onPress: () => console.log("AlertBox: PAYMENT SUCCESSFUL --- BANK")
-                                                }
-                                            ],
-                                            {cancelable: true}
-                                        )
-
-                                        FirebaseServices.deleteCart(FirebaseServices.getUserID())
-                                        navigation.navigate("Home Page")
-                                    }
-                                    else {
-                                        Toast.show({
-                                            type: "error",
-                                            position: "bottom",
-                                            text1: "(Bank Card) Payment Unsuccessful!",
-                                            text2: "Please complete all the necessary information!", 
-                                            visibilityTime: 1000,
-                                            bottomOffset: ScreenRatio_General(110),
-                                        })
-                                    }
-                                }
-                                else if (selectedId == "2") {
-                                    if (TnGPhoneNo != ''){     
-                                        
-                                        Alert.alert(
-                                            "Payment Successful",
-                                            "Payment Method: TOUCH N GO \n\nYour order has been placed!",
-                                            [
-                                                {
-                                                    text: "OK",
-                                                    onPress: () => console.log("AlertBox: PAYMENT SUCCESSFUL --- TNG")
-                                                }
-                                            ],
-                                            {cancelable: true}
-                                        )
-
-                                        FirebaseServices.deleteCart(FirebaseServices.getUserID())
-                                        navigation.navigate("Home Page")
-                                    }
-                                    else {
-                                        Toast.show({
-                                            type: "error",
-                                            position: "bottom",
-                                            text1: "(Touch n Go) Payment Unsuccessful!",
-                                            text2: "Please complete all the necessary information!", 
-                                            visibilityTime: 1000,
-                                            bottomOffset: ScreenRatio_General(110),
-                                        })
-                                    }
-                                }
-                                else if (selectedId == "3") {
-                                    if (BoostPhoneNo != ''){        
-                                        
-                                        Alert.alert(
-                                            "Payment Successful",
-                                            "Payment Method: BOOST \n\nYour order has been placed!",
-                                            [
-                                                {
-                                                    text: "OK",
-                                                    onPress: () => console.log("AlertBox: PAYMENT SUCCESSFUL --- BOOST")
-                                                }
-                                            ],
-                                            {cancelable: true}
-                                        )
-
-                                        FirebaseServices.deleteCart(FirebaseServices.getUserID())
-                                        navigation.navigate("Home Page")
-                                    }
-                                    else {
-                                        Toast.show({
-                                            type: "error",
-                                            position: "bottom",
-                                            text1: "(Boost) Payment Unsuccessful!",
-                                            text2: "Please complete all the necessary information!", 
-                                            visibilityTime: 1000,
-                                            bottomOffset: ScreenRatio_General(110),
-                                        })
-                                    }
-                                }
-                    }}>
-                    <Text style={{
-                        backgroundColor: (selectedId == '') ? "#d6d6d6" : "#000000",
-                        marginVertical: ScreenRatio_General(20),
-                        marginHorizontal: ScreenRatio_General(120),
-                        color: (selectedId == '') ? "#93959e" : "#ffffff",
-                        paddingVertical: ScreenRatio_General(20),
-                        borderRadius: ScreenRatio_General(35),
-                        fontSize: ScreenRatio_General(22),
-                        fontWeight: "bold",
-                        overflow: "hidden",
-                        textAlign: "center",
-                    }}> Pay {formatter.format(amount)}
-                    </Text>
-                </TouchableOpacity>
-            </SafeAreaView>
+          <View style={{
+            position: "absolute",
+            bottom: 0,
+            paddingBottom: ScreenRatio_iPhone(28),
+            width: "100%"
+          }}>
+            <View style={{flexDirection: "row", justifyContent: "space-between", marginBottom: ScreenRatio_iPhone(48)}}>
+                <Text style={{fontSize: ScreenRatio_iPhone(26), color: "#919191"}}>Total Payable</Text>
+                <Text style={{fontSize: ScreenRatio_iPhone(26)}}>{formatter.format(amount)}</Text>
+            </View>
+            <TouchableOpacity
+                disabled={!canProceed()}
+                onPress={async () => {
+                  // TODO: Create order in Firebase & Thank you page 
+                  // FirebaseServices.deleteCart(FirebaseServices.getUserID())
+                  await orderCompleted(selectedMethod)
+                  navigation.navigate("Home Page")
+                }}>
+                <Text style={{
+                  backgroundColor: canProceed() ? "#000000" : "#d6d6d6",
+                  color: canProceed() ? "#ffffff" : "#93959e",
+                  fontWeight: "500",
+                  paddingVertical: ScreenRatio_iPhone(16),
+                  borderRadius: ScreenRatio_iPhone(32),
+                  fontSize: ScreenRatio_iPhone(22),
+                  overflow: "hidden",
+                  textAlign: "center",
+                }}>Place Order
+                </Text>
+            </TouchableOpacity>
+          </View>
         )
     }
 
     const paymentToast = () => {
-        return (
-            <Toast ref={(ref => Toast.setRef(ref))}/>
-        )
+      return (
+          <Toast ref={(ref => Toast.setRef(ref))}/>
+      )
     }
 
-
     return (
-        <View>
-            <ScrollView>
-            {renderHeader()}
-            {renderTitle()}           
-            {renderDescription()}
-            {renderPaymentBox()}
+      <SafeAreaView style={styles.masterView}>
+        {renderHeader()}
+        {renderTitle()}
+        <ScrollView showsVerticalScrollIndicator={false} style={{maxHeight: "60%"}}>
+          <FlatList
+            data={cartItems}
+            renderItem={({item}) => { return <CheckoutItemCard item={item}/> }}
+            keyExtractor={(item) => item.id}
+            style={{marginTop: ScreenRatio_iPhone(20)}}
+            showsVerticalScrollIndicator={false}
+          />
+          <View style={{marginVertical: ScreenRatio_iPhone(16)}}>
             {renderPaymentFlatList()}
             {renderPaymentSelection()}
-            {renderPaymentButton()}
-            {paymentToast()}
-            </ScrollView>          
-        </View>
-    )  
+          </View>
+        </ScrollView>
+        {renderFooter()}
+      </SafeAreaView>
+    )
 }
 
 const styles = StyleSheet.create({
-    item: {
-        padding: ScreenRatio_General(17),
+    masterView: {
+      flex: 1,
+      marginHorizontal: ScreenRatio_iPhone(25),
+    },
+    headerText: {
+      marginTop: ScreenRatio_iPhone(25),
+      marginBottom: ScreenRatio_iPhone(10),
+      flexDirection: "row",
+      alignItems: "baseline",
+      justifyContent: "space-between",
+    },
+    subHeaderText: {
+      fontSize: ScreenRatio_General(22),
+      fontWeight: "bold",
+    },
+    paymentOption: {
+        padding: ScreenRatio_General(16),
         marginVertical: ScreenRatio_General(10),
         marginHorizontal: ScreenRatio_General(10),
-        borderRadius: 10,
-        borderWidth: 3,
+        borderRadius: ScreenRatio_General(30),
     },
-      headerButtons: {
-        width: ScreenRatio_General(30),
-        height: ScreenRatio_General(30),
-    },
-    space: { 
-        height: ScreenRatio_General(40),
-    },
-}); 
+});
 
 export default Payment

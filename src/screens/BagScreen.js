@@ -117,7 +117,7 @@ const BagScreen = ({navigation}) => {
                 </View>
                 <TouchableOpacity
                     disabled={!cartItems.length > 0}
-                    onPress={() => navigation.navigate("Checkout", {amount: getTotalPrice(cartItems)})}>
+                    onPress={() => navigation.navigate("Checkout", {amount: getTotalPrice(cartItems), cartItems: cartItems})}>
                     <Text style={{
                         backgroundColor: (cartItems.length > 0) ? "#000000" : "#d6d6d6",
                         color: (cartItems.length > 0) ? "#ffffff" : "#93959e",

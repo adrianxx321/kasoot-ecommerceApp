@@ -98,8 +98,8 @@ export const addToCartDup = async (uid, newCart) => {
 }
 
 export const deleteCart = async (uid) => {
-    await db.collection("items").doc(uid).update({
-        items: firebase.firestore.FieldValue.delete()
+    await db.collection("cart").doc(uid).update({
+        items: []
     })
 }
 
